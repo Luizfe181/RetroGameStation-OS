@@ -1,0 +1,149 @@
+# RetroGameStation GRUB Theme
+# Dark/Retro-futuristic aesthetic inspired by early 2000s consoles
+# Colors: Deep black #000000, Cobalt blue #004488, Neon cyan #00A8FF
+
+# =============================================================================
+# GLOBAL SETTINGS
+# =============================================================================
+
+# Background - solid deep black with optional image overlay
+desktop-image: "background.png"
+desktop-color: "#000000"
+
+# Global font - clean sans-serif with wide letter spacing
+# Using DejaVu Sans as fallback (included in ISO)
+font-regular: "DejaVu Sans Regular 16"
+font-bold: "DejaVu Sans Bold 16"
+font-title: "DejaVu Sans Bold 24"
+
+# Color palette
+color-normal: "#CCCCCC"           # Light gray for inactive items
+color-highlight: "#00A8FF"        # Neon cyan for selected item
+color-title: "#00A8FF"            # Neon cyan for title
+color-help: "#888888"             # Dim gray for help text
+color-timeout: "#FF6600"          # Orange for countdown
+color-border: "#004488"           # Cobalt blue for borders
+color-background: "#000000"       # Deep black
+
+# =============================================================================
+# LAYOUT - BOOT MENU
+# =============================================================================
+
+# Title area (top)
++ label {
+    text = "RetroGameStation OS"
+    font = "font-title"
+    color = "#00A8FF"
+    left = 10%
+    top = 5%
+    align = "left"
+}
+
+# Subtitle
++ label {
+    text = "Hybrid Gaming & Retroconsole Development"
+    font = "DejaVu Sans Regular 12"
+    color = "#888888"
+    left = 10%
+    top = 12%
+    align = "left"
+}
+
+# Boot menu list (centered)
++ boot_menu {
+    left = 15%
+    top = 22%
+    width = 70%
+    height = 55%
+    item_height = 36
+    item_spacing = 8
+    item_padding = 16
+    item_font = "font-regular"
+    item_color = "#CCCCCC"
+    selected_item_color = "#00A8FF"
+    selected_item_font = "font-bold"
+    # No heavy box - subtle glow effect via color change
+    highlight_image = "selection.png"
+    scrollbar = true
+    scrollbar_thumb = "scrollbar_thumb.png"
+    scrollbar_track = "scrollbar_track.png"
+}
+
+# Help text (bottom)
++ label {
+    id = "__timeout__"
+    text = "Iniciando automaticamente em @TIMEOUT@ segundos..."
+    font = "DejaVu Sans Regular 11"
+    color = "#FF6600"
+    left = 15%
+    bottom = 8%
+    align = "left"
+}
+
+# Keyboard hints
++ label {
+    text = "↑↓ Navegar  |  Enter Selecionar  |  e Editar  |  c Linha de comando"
+    font = "DejaVu Sans Regular 10"
+    color = "#666666"
+    left = 15%
+    bottom = 4%
+    align = "left"
+}
+
+# =============================================================================
+# PROGRESS BAR (during kernel load)
+# =============================================================================
+
++ progress_bar {
+    id = "__timeout__"
+    left = 15%
+    top = 85%
+    width = 70%
+    height = 6
+    bg_color = "#0A0E17"
+    fg_color = "#00A8FF"
+    border_color = "#004488"
+    show_text = true
+    font = "DejaVu Sans Regular 10"
+    text_color = "#CCCCCC"
+    text = "Carregando @VALUE@%"
+}
+
+# =============================================================================
+# EDIT MENU (when pressing 'e')
+# =============================================================================
+
++ label {
+    text = "Editar Comando de Boot"
+    font = "font-title"
+    color = "#00A8FF"
+    left = 10%
+    top = 5%
+}
+
++ edit_menu {
+    left = 10%
+    top = 15%
+    width = 80%
+    height = 70%
+    item_height = 28
+    item_font = "DejaVu Sans Mono 13"
+    item_color = "#CCCCCC"
+    selected_item_color = "#00A8FF"
+    selected_item_font = "DejaVu Sans Mono Bold 13"
+}
+
+# =============================================================================
+# COMMAND LINE (when pressing 'c')
+# =============================================================================
+
++ terminal {
+    left = 5%
+    top = 5%
+    width = 90%
+    height = 90%
+    font = "DejaVu Sans Mono 12"
+    color = "#CCCCCC"
+    bg_color = "#000000"
+    border_color = "#004488"
+}

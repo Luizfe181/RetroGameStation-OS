@@ -11,7 +11,7 @@ iso_publisher="RetroGameStation <https://github.com/retrogamestation>"
 iso_application="RetroGameStation - Hybrid Gaming & Retrodev Live/Install ISO"
 iso_version="$(date +%Y.%m.%d)"
 install_dir="arch"
-bootmodes=('bios.syslinux.mbr' 'bios.syslinux.eltorito' 'uefi-x64.systemd-boot.esp' 'uefi-x64.systemd-boot.eltorito')
+bootmodes=('bios.syslinux' 'uefi.systemd-boot')
 arch="x86_64"
 pacman_conf="pacman.conf"
 

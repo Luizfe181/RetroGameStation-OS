@@ -1,0 +1,98 @@
+[Branding]
+# RetroGameStation OS - Calamares Branding
+# Dark/Retro-futuristic aesthetic: Deep black #000000, Cobalt #0A0E17, Neon cyan #00A8FF
+
+# Product identification
+name = "RetroGameStation OS"
+version = "2024.12"
+shortname = "RetroGameStation"
+
+# Window setup
+windowTitle = "Instalador RetroGameStation"
+windowWidth = 960
+windowHeight = 640
+windowIcon = "icon.png"
+
+# Colors (Qt palette)
+# Deep black background
+backgroundColor = "#000000"
+# Very dark cobalt sidebar
+sidebarBackgroundColor = "#0A0E17"
+# Neon cyan accent
+accentColor = "#00A8FF"
+# Light gray text
+textColor = "#CCCCCC"
+# Dim gray secondary text
+secondaryTextColor = "#888888"
+# Highlight for active step
+activeStepColor = "#00A8FF"
+# Completed step color
+completedStepColor = "#0088CC"
+# Future step (translucent)
+futureStepColor = "#333333"
+# Button colors
+buttonBackgroundColor = "#1A1F2E"
+buttonHoverColor = "#004488"
+buttonPressedColor = "#003366"
+buttonTextColor = "#CCCCCC"
+buttonFocusColor = "#00A8FF"
+
+# Module styling
+# Module titles
+moduleTitleColor = "#00A8FF"
+# Module descriptions
+moduleDescriptionColor = "#AAAAAA"
+
+# Warning/error colors
+warningColor = "#FFAA00"
+errorColor = "#FF4444"
+successColor = "#00CC88"
+
+# Progress bar
+progressBackgroundColor = "#0A0E17"
+progressChunkColor = "#00A8FF"
+
+# =============================================================================
+# SLIDESHOW
+# =============================================================================
+
+slideshow = "show.qml"
+slideshowSpeed = 8000
+
+# =============================================================================
+# STYLESHEET
+# =============================================================================
+
+stylesheet = "stylesheet.qss"
+
+# =============================================================================
+# SQUASHFS OPTIONS (for branding assets)
+# =============================================================================
+
+# These files will be copied to the target system
+# during installation
+copyFiles = [
+    "icon.png",
+    "background.png",
+    "watermark.png",
+    "stylesheet.qss",
+    "show.qml"
+]
+
+# =============================================================================
+# WIDGET OVERRIDES
+# =============================================================================
+
+# Show detailed partitioning help
+showPartitioningHelp = true
+
+# Keyboard layout page - show flag icons
+showKeyboardFlags = true
+
+# Welcome page - custom text
+welcomeLabel = "Bem-vindo ao instalador do RetroGameStation OS"
+welcomeDescription = "Esta instalação configurará seu sistema como uma estação híbrida de jogos (SteamOS-style com Gamescope) e laboratório de desenvolvimento retroconsole (PS2, GameCube, N64, Dreamcast, Saturn, PS1, PSP, Vita, Switch, 3DS, GBA/NDS)."
+
+# Finished page
+finishedLabel = "Instalação concluída!"
+finishedDescription = "RetroGameStation OS foi instalado com sucesso. Ao reiniciar, você poderá escolher entre Modo Console (Gamescope + Steam), Modo Desktop (KDE Plasma) ou Modo Híbrido (alternância via Super+Q / F1)."
