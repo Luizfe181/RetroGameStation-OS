@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies and setup build user
         run: |
-          pacman -Sy --noconfirm archiso git base-devel devtools pacman-contrib
+          pacman -Sy --noconfirm --needed archiso git base-devel devtools pacman-contrib make pkgconf fakeroot
           # Create build user
           useradd -m -G wheel -s /bin/bash builder
           echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
