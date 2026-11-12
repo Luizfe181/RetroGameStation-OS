@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pacman -Sy --noconfirm archiso git base-devel devtools
+          pacman -Sy --noconfirm archiso git base-devel devtools pacman-contrib
 
       - name: Build local repo (retrodev toolchains)
         run: |
