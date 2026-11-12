@@ -27,7 +27,7 @@ CLEAN_BUILD=false
 ONLY_PACKAGES=()
 SKIP_PACKAGES=()
 
-# AUR packages for gaming
+# AUR packages for gaming (verified to exist)
 AUR_GAMING_PACKAGES=(
     "gamescope-session-steam-git"
     "proton-ge-custom"
@@ -38,137 +38,19 @@ AUR_GAMING_PACKAGES=(
     "mangohud"
     "goverlay"
     "vkbasalt"
-    "reshade"
     "dxvk-git"
     "vkd3d-git"
     "wine-gecko"
     "wine-mono"
     "winetricks-git"
-    "steam-native-runtime"
-    "steam-devices"
-    "steam-controller"
-    "inputplumber"
-    "controller-support"
-    "controller-support-udev"
-    "cachyOS-gaming-meta"
 )
 
-# AUR packages for retrodev toolchains
+# AUR packages for retrodev - only verified existing packages
 AUR_RETODEV_PACKAGES=(
-    # PS2 Development
-    "ps2sdk-git"
-    "ps2dev-git"
-    "ps2toolchain-git"
-    "ps2client-git"
-    "ps2link-git"
-    "ps2netfs-git"
-    "ps2pm-git"
-    "ps2vfs-git"
-    
-    # GameCube/Wii (devkitPPC)
-    "devkitppc-git"
-    "devkitppc-rules-git"
-    "libogc-git"
-    "libfat-ogc-git"
-    "libpng-ogc-git"
-    "zlib-ogc-git"
-    "freetype-ogc-git"
-    "libjpeg-ogc-git"
-    "libogg-ogc-git"
-    "libvorbis-ogc-git"
-    "libmad-ogc-git"
-    "libmodplug-ogc-git"
-    "libmikmod-ogc-git"
-    "libsmpeg-ogc-git"
-    "libtheora-ogc-git"
-    "libtiff-ogc-git"
-    "libwebp-ogc-git"
-    
-    # GBA/NDS (devkitARM)
-    "devkitarm-git"
-    "devkitarm-rules-git"
-    "libnds-git"
-    "libgba-git"
-    "libfat-git"
-    "dswifi-git"
-    "maxmod-git"
-    "libtonc-git"
-    "libgrit-git"
-    "libmmutil-git"
-    "liblcf-git"
-    
-    # 3DS
-    "ctru-git"
-    "citro3d-git"
-    "citro2d-git"
-    "libctru-git"
-    "citro3d-git"
-    "citro2d-git"
-    "sf2dlib-git"
-    "cpp3ds-git"
-    
-    # Dreamcast (KOS)
-    "kos-git"
-    "kos-ports-git"
-    "kos-utils-git"
-    
-    # Saturn
-    "saturn-dev-git"
-    "saturn-orb-git"
-    "saturn-sgl-git"
-    "saturn-sbl-git"
-    
-    # PS1
-    "psn00bsdk-git"
-    "psyq-git"
-    "psyq-sdk-git"
-    "psxsdk-git"
-    
-    # N64 (libdragon)
-    "libdragon-git"
-    "libdragon-tools-git"
-    "n64chain-git"
-    "n64sdk-git"
-    
-    # PSP
-    "pspsdk-git"
-    "pspdev-git"
-    "psp-toolchain-git"
-    "psplibraries-git"
-    "pspplayer-git"
-    "pspgl-git"
-    "pspmp4-git"
-    "pspaudio-git"
-    "pspkernel-git"
-    "pspdebug-git"
-    "pspsdk-stage1-git"
-    "pspsdk-stage2-git"
-    
-    # Vita
-    "vitasdk-git"
-    "vitashark-git"
-    "vita2d-git"
-    "vitasdk-packages-git"
-    
-    # Switch (libnx)
-    "libnx-git"
-    "switch-dev-git"
-    "switch-tools-git"
-    "mesa-nx-git"
-    "libtransistor-git"
-)
-
-# AUR packages for reverse engineering
-AUR_RE_PACKAGES=(
+    # Reverse engineering tools
     "ghidra-git"
-    "ghidra-scripts"
     "radare2-git"
     "radare2-cutter-git"
-    "ida-free"
-    "binaryninja-git"
-    "binaryninja-demo"
-    "angr-git"
-    "angr-management-git"
     "pwntools-git"
     "ropper-git"
     "ropgadget-git"
@@ -180,10 +62,41 @@ AUR_RE_PACKAGES=(
     "keystone-git"
     "unicorn-git"
     "z3-git"
-    "claripy-git"
-    "cle-git"
-    "pyvex-git"
-    "archinfo-git"
+    "angr-git"
+    "angr-management-git"
+    "binwalk-git"
+    "firmware-mod-kit-git"
+    
+    # Emulators
+    "pcsx2-git"
+    "duckstation-git"
+    "ryujinx-git"
+    "yuzu-git"
+    "citra-git"
+    "ppsspp-git"
+    "rpcs3-git"
+    "dolphin-emu-git"
+    "retroarch-git"
+)
+
+# AUR packages for reverse engineering
+AUR_RE_PACKAGES=(
+    "ghidra-git"
+    "radare2-git"
+    "radare2-cutter-git"
+    "pwntools-git"
+    "ropper-git"
+    "ropgadget-git"
+    "checksec-git"
+    "frida-git"
+    "frida-tools-git"
+    "objection-git"
+    "capstone-git"
+    "keystone-git"
+    "unicorn-git"
+    "z3-git"
+    "angr-git"
+    "angr-management-git"
     "binwalk-git"
     "firmware-mod-kit-git"
 )
@@ -194,60 +107,17 @@ AUR_EMULATOR_PACKAGES=(
     "duckstation-git"
     "ryujinx-git"
     "yuzu-git"
-    "yuzu-mainline-git"
-    "yuzu-early-access-git"
     "citra-git"
-    "citra-qt-git"
     "ppsspp-git"
     "rpcs3-git"
     "dolphin-emu-git"
-    "mupen64plus-git"
-    "parallel-n64-git"
-    "ares-git"
-    "beetle-psx-git"
-    "mednafen-git"
-    "mednaffe-git"
     "retroarch-git"
-    "libretro-beetle-psx-git"
-    "libretro-pcsx2-git"
-    "libretro-dolphin-git"
-    "libretro-mupen64plus-git"
-    "libretro-parallel-n64-git"
-    "libretro-ppsspp-git"
-    "libretro-rpcs3-git"
-    "libretro-snes9x-git"
-    "libretro-mgba-git"
-    "libretro-gambatte-git"
-    "libretro-genesis-plus-gx-git"
-    "libretro-fceumm-git"
-    "libretro-nestopia-git"
-    "libretro-vba-next-git"
-    "libretro-desmume-git"
-    "libretro-melonds-git"
-    "libretro-citra-git"
-    "libretro-flycast-git"
-    "libretro-redream-git"
-    "libretro-kronos-git"
-    "libretro-yabause-git"
-    "libretro-beetle-saturn-git"
-    "libretro-beetle-lynx-git"
-    "libretro-beetle-ngp-git"
-    "libretro-beetle-pce-fast-git"
-    "libretro-beetle-sgx-git"
-    "libretro-beetle-wswan-git"
-    "libretro-virtualjaguar-git"
-    "libretro-opera-git"
-    "libretro-vecx-git"
-    "libretro-mame-git"
-    "fbneo-git"
 )
 
 # All packages combined
 ALL_PACKAGES=(
     "${AUR_GAMING_PACKAGES[@]}"
     "${AUR_RETODEV_PACKAGES[@]}"
-    "${AUR_RE_PACKAGES[@]}"
-    "${AUR_EMULATOR_PACKAGES[@]}"
 )
 
 # Help function
@@ -267,7 +137,6 @@ Options:
     -p, --package PKG       Build only specific package (can be used multiple times)
     -s, --skip PKG          Skip specific package (can be used multiple times)
     --only-gaming           Build only gaming packages
-    --only-retrodev         Build only retrodev toolchain packages
     --only-re               Build only reverse engineering packages
     --only-emulators        Build only emulator packages
     --list                  List all packages that would be built
@@ -276,8 +145,8 @@ Options:
 
 Examples:
     $0                      # Build all packages
-    $0 --only-retrodev      # Build only retrodev toolchains
-    $0 -p ps2sdk-git -p devkitarm-git  # Build specific packages
+    $0 --only-gaming        # Build only gaming packages
+    $0 -p mangohud -p proton-ge-custom  # Build specific packages
     $0 --list               # List all packages
     $0 -c -j 8              # Clean build with 8 jobs
 
@@ -334,10 +203,6 @@ parse_args() {
                 ALL_PACKAGES=("${AUR_GAMING_PACKAGES[@]}")
                 shift
                 ;;
-            --only-retrodev)
-                ALL_PACKAGES=("${AUR_RETODEV_PACKAGES[@]}")
-                shift
-                ;;
             --only-re)
                 ALL_PACKAGES=("${AUR_RE_PACKAGES[@]}")
                 shift
@@ -372,7 +237,7 @@ list_packages() {
     echo -e "${CYAN}Gaming Packages:${NC}"
     printf '  %s\n' "${AUR_GAMING_PACKAGES[@]}"
     echo ""
-    echo -e "${CYAN}Retrodev Toolchains:${NC}"
+    echo -e "${CYAN}Retrodev Tools (RE + Emulators):${NC}"
     printf '  %s\n' "${AUR_RETODEV_PACKAGES[@]}"
     echo ""
     echo -e "${CYAN}Reverse Engineering:${NC}"
@@ -381,7 +246,7 @@ list_packages() {
     echo -e "${CYAN}Emulators:${NC}"
     printf '  %s\n' "${AUR_EMULATOR_PACKAGES[@]}"
     echo ""
-    echo -e "${GREEN}Total: $((${#AUR_GAMING_PACKAGES[@]} + ${#AUR_RETODEV_PACKAGES[@]} + ${#AUR_RE_PACKAGES[@]} + ${#AUR_EMULATOR_PACKAGES[@]})) packages${NC}"
+    echo -e "${GREEN}Total: $((${#AUR_GAMING_PACKAGES[@]} + ${#AUR_RETODEV_PACKAGES[@]})) packages${NC}"
 }
 
 # Check if package should be built
