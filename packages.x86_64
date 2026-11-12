@@ -261,7 +261,6 @@ llvm
 lld
 lldb
 compiler-rt
-rust
 cargo
 rustup
 python
@@ -275,7 +274,6 @@ yarn
 pnpm
 go
 jdk-openjdk
-jre-openjdk
 maven
 gradle
 dotnet-sdk
@@ -336,6 +334,12 @@ python-keystone
 python-unicorn
 python-z3-solver
 python-ropper
+
+# Explicit providers to avoid interactive prompts during build
+iptables
+mkinitcpio
+qt6-multimedia-ffmpeg
+man-db
 
 # =============================================================================
 # UTILITIES & TOOLS
@@ -415,7 +419,15 @@ adobe-source-sans-pro-fonts
 adobe-source-serif-pro-fonts
 cantarell-fonts
 inter-font
-nerd-fonts
+# Nerd Fonts (specific packages instead of group to avoid interactive prompt)
+ttf-firacode-nerd
+ttf-jetbrains-mono-nerd
+ttf-cascadia-code-nerd
+ttf-hack-nerd
+ttf-inconsolata-nerd
+ttf-fantasque-nerd
+ttf-0xproto-nerd
+ttf-victor-mono-nerd
 
 # =============================================================================
 # GRAPHICAL APPLICATIONS
