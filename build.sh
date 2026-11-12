@@ -138,7 +138,7 @@ parse_args() {
 check_dependencies() {
     print_step "Checking dependencies..."
     
-    local deps=("archiso" "git" "make" "pkgconf" "fakeroot" "pacman" "pactree")
+    local deps=("mkarchiso" "git" "make" "pkgconf" "fakeroot" "pacman" "pactree")
     local missing=()
     
     for dep in "${deps[@]}"; do
