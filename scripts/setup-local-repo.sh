@@ -37,7 +37,6 @@ ESSENTIAL_PACKAGES=(
     
     # Emulators only available in AUR (git versions with better features)
     "ryujinx-git"
-    "rpcs3-git"
 )
 
 # FULL PACKAGES - Everything (slow build)
