@@ -42,10 +42,11 @@ systemd_services=(
   'NetworkManager.service'
   'bluetooth.service'
   'steam-firstboot.service'
-  'gamescope-session.service'
+  'sddm.service'
   'retrodev-env-setup.service'
   'retrogamestation-boot-video.service'
   'activate-graphical.target.service'
+  'setup-live-environment.service'
 )
 
 # Profile-specific settings

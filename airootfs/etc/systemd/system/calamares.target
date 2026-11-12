@@ -1,0 +1,17 @@
+[Unit]
+Description=Calamares Installer Target
+Documentation=https://github.com/retrogamestation
+Requires=graphical.target
+After=graphical.target
+Conflicts=gamescope-session.service
+Before=gamescope-session.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/calamares
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=graphical.target

@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+#
+# setup-live-environment - Configure live environment for RetroGameStation
+# Runs on live boot to set up the live environment
+#
+
+set -euo pipefail
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+print_info() { echo -e "${BLUE}[INFO]${NC} $*"; }
+print_success() { echo -e "${GREEN}[SUCCESS]${NC} $*"; }
+print_warning() { echo -e "${YELLOW}[WARNING]${NC} $*"; }
+print_error() { echo -e "${RED}[ERROR]${NC} $*"; }
+
+# Check if running as root
+if [[ $EUID -ne 0 ]]; then
+    print_error "This script must be run as root"
+    exit 1
+fi
+
+print_step "Setting up RetroGameStation Live Environment"
+
+# Copy Calamares desktop entry to gamer's desktop
+print_step "Setting up Install icon on desktop..."
+if [[ -d /home/gamer/Desktop ]]; then
+    cp /usr/share/applications/calamares.desktop /home/gamer/Desktop/
+    chown gamer:gamer /home/gamer/Desktop/calamares.desktop
+    chmod +x /home/gamer/Desktop/calamares.desktop
+    print_success "Install icon added to desktop"
+else
+    mkdir -p /home/gamer/Desktop
+    cp /usr/share/applications/calamares.desktop /home/gamer/Desktop/
+    chown gamer:gamer /home/gamer/Desktop/calamares.desktop
+    chmod +x /home/gamer/Desktop/calamares.desktop
+    print_success "Install icon added to desktop"
+fi
+
+# Create a "Try RetroGameStation" info file on desktop
+cat > /home/gamer/Desktop/TRY_RETROGAMESTATION.desktop << 'EOF'
+[Desktop Entry]
+Type=Link
+Name=Try RetroGameStation (Live)
+Comment=You are running RetroGameStation in live mode. Click "Install RetroGameStation" to install to disk.
+Icon=system-run
+URL=file:///usr/share/applications/calamares.desktop
+EOF
+
+chown gamer:gamer /home/gamer/Desktop/TRY_RETROGAMESTATION.desktop
+chmod +x /home/gamer/Desktop/TRY_RETROGAMESTATION.desktop
+
+# Ensure gamer user exists and has proper setup
+if ! id "gamer" &>/dev/null; then
+    print_step "Creating gamer user..."
+    useradd -m -g users -G wheel,video,audio,optical,storage,power,network,input,uucp,lp,games,render,autologin -s /bin/bash gamer
+    print_success "User 'gamer' created"
+else
+    # Ensure gamer is in all necessary groups
+    usermod -aG wheel,video,audio,optical,storage,power,network,input,uucp,lp,games,render,autologin gamer
+    print_info "User 'gamer' already exists, updated groups"
+fi
+
+# Set up sudo for gamer
+cat > /etc/sudoers.d/gamer << 'EOF'
+gamer ALL=(ALL) NOPASSWD: ALL
+EOF
+chmod 440 /etc/sudoers.d/gamer
+
+# Set up home directory
+mkdir -p /home/gamer
+chown -R gamer:gamer /home/gamer
+
+# Set up Steam directories
+mkdir -p /home/gamer/.steam/steam/steamapps
+mkdir -p /home/gamer/Games
+chown -R gamer:gamer /home/gamer/.steam
+chown -R gamer:gamer /home/gamer/Games
+
+# Set up retrodev environment for user
+mkdir -p /home/gamer/.config/environment.d
+cat > /home/gamer/.config/environment.d/retrodev.conf << 'EOF'
+PS2SDK=/opt/ps2sdk
+PS2DEV=/opt/ps2dev
+PS2TOOLCHAIN=/opt/ps2toolchain
+DEVKITPRO=/opt/devkitpro
+DEVKITPPC=/opt/devkitpro/devkitPPC
+DEVKITARM=/opt/devkitpro/devkitARM
+LIBNX=/opt/libnx
+KOS_BASE=/opt/kos
+LIBDRAGON=/opt/libdragon
+VITASDK=/opt/vitasdk
+PSPSDK=/opt/pspsdk
+PATH=${PATH}:/opt/ps2sdk/bin:/opt/ps2dev/bin:/opt/ps2toolchain/bin:/opt/devkitpro/devkitPPC/bin:/opt/devkitpro/devkitARM/bin:/opt/libnx/bin:/opt/kos/utils/bin
+EOF
+chown gamer:gamer /home/gamer/.config/environment.d/retrodev.conf
+
+# Generate locale
+sed -i 's/#pt_BR.UTF-8 UTF-8/pt_BR.UTF-8 UTF-8/' /etc/locale.gen
+locale-gen
+
+# Set timezone
+ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+hwclock --systohc
+
+print_success "Live environment setup completed!"
+print_info "You are now in the RetroGameStation live environment."
+print_info "Click 'Install RetroGameStation' on the desktop to install to disk."
+print_info "Press Super+Q or F1 to switch between KDE Plasma and Gamescope+Steam mode."
