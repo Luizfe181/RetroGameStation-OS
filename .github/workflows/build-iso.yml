@@ -24,8 +24,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
+        # Sem submodules: recursive (não temos submodules)
 
       - name: Install dependencies
         run: |
