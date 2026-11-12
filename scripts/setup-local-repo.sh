@@ -334,18 +334,7 @@ build_package() {
         return 1
     fi
     
-    # Update pkgver if it's a git package
-    if grep -q "pkgver()" PKGBUILD; then
-        print_info "Updating pkgver for $pkg..."
-        # Run pkgver() function
-        # shellcheck source=/dev/null
-        source PKGBUILD
-        if declare -f pkgver &>/dev/null; then
-            pkgver
-        fi
-    fi
-    
-    # Build with makepkg
+    # Build with makepkg (handles pkgver automatically)
     local makepkg_args=(-s --noconfirm --skippgpcheck)
     if [[ "$VERBOSE" == true ]]; then
         makepkg_args+=(-v)
