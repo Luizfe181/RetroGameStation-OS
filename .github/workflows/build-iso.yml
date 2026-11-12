@@ -29,10 +29,10 @@ jobs:
         run: |
           pacman -Sy --noconfirm archiso git base-devel devtools pacman-contrib
 
-      - name: Build local repo (retrodev toolchains)
+      - name: Build local repo (gaming + RE + emulators)
         run: |
           chmod +x scripts/setup-local-repo.sh
-          ./scripts/setup-local-repo.sh --only-retrodev
+          ./scripts/setup-local-repo.sh
 
       - name: Build ISO
         run: |
