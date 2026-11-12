@@ -24,7 +24,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        # Sem submodules: recursive (não temos submodules)
 
       - name: Install dependencies
         run: |
@@ -32,13 +31,11 @@ jobs:
 
       - name: Build local repo (retrodev toolchains)
         run: |
-          cd archiso-profile
           chmod +x scripts/setup-local-repo.sh
           ./scripts/setup-local-repo.sh --only-retrodev
 
       - name: Build ISO
         run: |
-          cd archiso-profile
           chmod +x build.sh
           ./build.sh --no-local-repo
 
@@ -46,14 +43,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: retrogamestation-iso
-          path: archiso-profile/out/*.iso
+          path: out/*.iso
           retention-days: 7
 
       - name: Create Release (on tag)
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
-          files: archiso-profile/out/*.iso
+          files: out/*.iso
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
