@@ -29,11 +29,12 @@ packages_dir="packages"
 file_permissions=(
   ["/etc/shadow"]="0:0:400"
   ["/etc/gshadow"]="0:0:400"
-  ["/root"]="0:0:750"
-  ["/root/.automated_script.sh"]="0:0:755"
   ["/usr/local/bin/retrogame-setup"]="0:0:755"
   ["/usr/local/bin/setup-local-repo"]="0:0:755"
   ["/usr/local/bin/retrodev-env"]="0:0:755"
+  ["/usr/local/bin/retrodev-install"]="0:0:755"
+  ["/usr/local/bin/retrodev-clone"]="0:0:755"
+  ["/usr/local/bin/session-switch"]="0:0:755"
 )
 
 # Systemd services to enable
