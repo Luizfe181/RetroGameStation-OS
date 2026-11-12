@@ -45,6 +45,7 @@ jobs:
 
       - name: Build ISO
         run: |
+          sudo pacman -Sy --noconfirm --needed archiso pacman-contrib
           chmod +x build.sh
           ./build.sh --no-local-repo
 
