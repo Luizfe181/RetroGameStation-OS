@@ -29,30 +29,15 @@ SKIP_PACKAGES=()
 MODE="essential"
 
 # ESSENTIAL PACKAGES - Not in official Arch repos, needed for ISO
+# Only packages that build reliably in CI
 ESSENTIAL_PACKAGES=(
-    # Gaming overlays/performance
-    "mangohud"
+    # Gaming overlays/performance (not in official repos)
     "goverlay"
     "vkbasalt"
     
-    # Game launchers/stores
-    "heroic-games-launcher"
-    "proton-ge-custom"
-    "protonup-qt"
-    
-    # Reverse Engineering (binaries not in repos)
-    "ghidra-git"
-    "radare2-git"
-    "radare2-cutter-git"
-    
-    # Emulators (latest git versions)
-    "pcsx2-git"
-    "duckstation-git"
+    # Emulators only available in AUR (git versions with better features)
     "ryujinx-git"
-    "yuzu-git"
-    "citra-git"
     "rpcs3-git"
-    "dolphin-emu-git"
 )
 
 # FULL PACKAGES - Everything (slow build)

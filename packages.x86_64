@@ -258,7 +258,6 @@ lutris
 heroic-games-launcher
 bottles
 protonup-qt
-proton-ge-custom
 gamemode
 lib32-gamemode
 mangohud
@@ -275,7 +274,6 @@ wine
 wine-gecko
 wine-mono
 winetricks
-winetricks-git
 bottles
 flatpak
 flatpak-builder
@@ -450,12 +448,10 @@ yuzu-early-access
 citrus
 citra
 citra-qt
-citra-git
 ppsspp
 ppsspp-qt
 rpcs3
 dolphin-emu
-dolphin-emu-git
 mupen64plus
 mupen64plus-qt
 parallel-n64
@@ -804,7 +800,12 @@ thunderbird-i18n-pt-br
 # PACKAGES FROM LOCAL REPO (AUR/Retrodev) - Built via setup-local-repo.sh
 # =============================================================================
 # These will be added to the local repo and installed during build
-# Uncomment after building local repo:
+goverlay
+vkbasalt
+ryujinx-git
+rpcs3-git
+
+# Retrodev toolchains (uncomment after building):
 # ps2sdk
 # ps2dev
 # ps2toolchain
