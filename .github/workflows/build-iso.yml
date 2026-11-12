@@ -40,7 +40,7 @@ jobs:
           sudo -u builder bash -c '
             cd /__w/RetroGameStation-OS/RetroGameStation-OS
             chmod +x scripts/setup-local-repo.sh
-            ./scripts/setup-local-repo.sh --mode essential --repo-dir packages/local
+            ./scripts/setup-local-repo.sh --mode essential --repo-dir /__w/RetroGameStation-OS/RetroGameStation-OS/packages/local
           '
 
       - name: Build ISO
