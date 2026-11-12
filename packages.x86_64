@@ -302,28 +302,7 @@ squashfs-tools
 mtd-utils
 flashrom
 
-# =============================================================================
-# EMULATORS (official repos - stable versions)
-# =============================================================================
-ppsspp
-dolphin-emu
-mupen64plus
-mednafen
-retroarch
-# Libretro cores available in extra
-libretro-beetle-psx
-libretro-dolphin
-libretro-parallel-n64
-libretro-ppsspp
-libretro-snes9x
-libretro-mgba
-libretro-gambatte
-libretro-genesis-plus-gx
-libretro-nestopia
-libretro-desmume
-libretro-flycast
-libretro-kronos
-libretro-yabause
+
 
 # =============================================================================
 # PYTHON TOOLS FOR RETRODEV/RE
@@ -453,7 +432,6 @@ mpv
 vlc
 celluloid
 haruna
-dolphin
 konsole
 kate
 kwrite
@@ -524,7 +502,6 @@ thunderbird-i18n-pt-br
 # These will be added to the local repo and installed during build
 goverlay
 vkbasalt
-ryujinx-git
 
 # Retrodev toolchains (uncomment after building):
 # ps2sdk
