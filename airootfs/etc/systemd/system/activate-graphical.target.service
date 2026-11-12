@@ -1,0 +1,14 @@
+[Unit]
+Description=Activate graphical target for gamescope
+DefaultDependencies=no
+Requires=systemd-user-sessions.service
+After=systemd-user-sessions.service
+Before=gamescope-session.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl isolate graphical.target
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

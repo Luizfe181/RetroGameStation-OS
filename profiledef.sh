@@ -45,6 +45,7 @@ systemd_services=(
   'gamescope-session.service'
   'retrodev-env-setup.service'
   'retrogamestation-boot-video.service'
+  'activate-graphical.target.service'
 )
 
 # Profile-specific settings

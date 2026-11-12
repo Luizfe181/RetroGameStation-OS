@@ -1,2 +1,2 @@
 root:x:0:
-gamer:x:1000:
+gamer:x:1000,render
