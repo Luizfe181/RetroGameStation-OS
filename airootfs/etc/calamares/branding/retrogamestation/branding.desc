@@ -73,10 +73,16 @@ stylesheet = "stylesheet.qss"
 # during installation
 copyFiles = [
     "icon.png",
+    "icon.svg",
     "background.png",
+    "background.svg",
     "watermark.png",
+    "watermark.svg",
     "stylesheet.qss",
-    "show.qml"
+    "show.qml",
+    "icons/gamepad.svg",
+    "icons/code.svg",
+    "icons/keyboard.svg"
 ]
 
 # =============================================================================

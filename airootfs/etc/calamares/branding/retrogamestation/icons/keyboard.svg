@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <g fill="#FFAA00">
+    <!-- Keyboard outline -->
+    <rect x="10" y="20" width="60" height="40" rx="4" fill="none" stroke="currentColor" stroke-width="3"/>
+    <!-- Key rows -->
+    <g stroke="currentColor" stroke-width="1.5">
+      <line x1="16" y1="28" x2="64" y2="28"/>
+      <line x1="16" y1="36" x2="64" y2="36"/>
+      <line x1="16" y1="44" x2="64" y2="44"/>
+      <line x1="16" y1="52" x2="64" y2="52"/>
+      <line x1="20" y1="20" x2="20" y2="56"/>
+      <line x1="30" y1="20" x2="30" y2="56"/>
+      <line x1="40" y1="20" x2="40" y2="56"/>
+      <line x1="50" y1="20" x2="50" y2="56"/>
+      <line x1="60" y1="20" x2="60" y2="56"/>
+    </g>
+    <!-- Highlighted keys (Super+Q / F1) -->
+    <rect x="22" y="22" width="16" height="12" rx="2" fill="currentColor" opacity="0.3"/>
+    <rect x="42" y="22" width="16" height="12" rx="2" fill="currentColor" opacity="0.3"/>
+  </g>
+</svg>
