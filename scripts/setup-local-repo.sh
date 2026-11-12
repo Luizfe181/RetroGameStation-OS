@@ -26,31 +26,52 @@ VERBOSE=false
 CLEAN_BUILD=false
 ONLY_PACKAGES=()
 SKIP_PACKAGES=()
+MODE="essential"
 
-# AUR packages for gaming (verified to exist)
-AUR_GAMING_PACKAGES=(
-    "gamescope-session-steam-git"
-    "proton-ge-custom"
-    "protonup-qt"
-    "heroic-games-launcher"
-    "bottles"
-    "lutris"
+# ESSENTIAL PACKAGES - Not in official Arch repos, needed for ISO
+ESSENTIAL_PACKAGES=(
+    # Gaming overlays/performance
     "mangohud"
     "goverlay"
     "vkbasalt"
+    
+    # Game launchers/stores
+    "heroic-games-launcher"
+    "proton-ge-custom"
+    "protonup-qt"
+    
+    # Reverse Engineering (binaries not in repos)
+    "ghidra-git"
+    "radare2-git"
+    "radare2-cutter-git"
+    
+    # Emulators (latest git versions)
+    "pcsx2-git"
+    "duckstation-git"
+    "ryujinx-git"
+    "yuzu-git"
+    "citra-git"
+    "rpcs3-git"
+    "dolphin-emu-git"
+)
+
+# FULL PACKAGES - Everything (slow build)
+FULL_PACKAGES=(
+    "${ESSENTIAL_PACKAGES[@]}"
+    "gamescope-session-steam-git"
+    "bottles"
+    "lutris"
     "dxvk-git"
     "vkd3d-git"
     "wine-gecko"
     "wine-mono"
     "winetricks-git"
-)
-
-# AUR packages for retrodev - only verified existing packages
-AUR_RETODEV_PACKAGES=(
-    # Reverse engineering tools
-    "ghidra-git"
-    "radare2-git"
-    "radare2-cutter-git"
+    "steam-native-runtime"
+    "steam-devices"
+    "steam-controller"
+    "inputplumber"
+    "controller-support"
+    "controller-support-udev"
     "pwntools-git"
     "ropper-git"
     "ropgadget-git"
@@ -66,66 +87,41 @@ AUR_RETODEV_PACKAGES=(
     "angr-management-git"
     "binwalk-git"
     "firmware-mod-kit-git"
-    
-    # Emulators
-    "pcsx2-git"
-    "duckstation-git"
-    "ryujinx-git"
-    "yuzu-git"
-    "citra-git"
-    "ppsspp-git"
-    "rpcs3-git"
-    "dolphin-emu-git"
     "retroarch-git"
+    "libretro-beetle-psx-git"
+    "libretro-pcsx2-git"
+    "libretro-dolphin-git"
+    "libretro-mupen64plus-git"
+    "libretro-parallel-n64-git"
+    "libretro-ppsspp-git"
+    "libretro-rpcs3-git"
+    "libretro-snes9x-git"
+    "libretro-mgba-git"
+    "libretro-gambatte-git"
+    "libretro-genesis-plus-gx-git"
+    "libretro-fceumm-git"
+    "libretro-nestopia-git"
+    "libretro-vba-next-git"
+    "libretro-desmume-git"
+    "libretro-melonds-git"
+    "libretro-citra-git"
+    "libretro-flycast-git"
+    "libretro-redream-git"
+    "libretro-kronos-git"
+    "libretro-yabause-git"
+    "libretro-beetle-saturn-git"
+    "fbneo-git"
 )
 
-# AUR packages for reverse engineering
-AUR_RE_PACKAGES=(
-    "ghidra-git"
-    "radare2-git"
-    "radare2-cutter-git"
-    "pwntools-git"
-    "ropper-git"
-    "ropgadget-git"
-    "checksec-git"
-    "frida-git"
-    "frida-tools-git"
-    "objection-git"
-    "capstone-git"
-    "keystone-git"
-    "unicorn-git"
-    "z3-git"
-    "angr-git"
-    "angr-management-git"
-    "binwalk-git"
-    "firmware-mod-kit-git"
-)
-
-# AUR packages for emulators
-AUR_EMULATOR_PACKAGES=(
-    "pcsx2-git"
-    "duckstation-git"
-    "ryujinx-git"
-    "yuzu-git"
-    "citra-git"
-    "ppsspp-git"
-    "rpcs3-git"
-    "dolphin-emu-git"
-    "retroarch-git"
-)
-
-# All packages combined
-ALL_PACKAGES=(
-    "${AUR_GAMING_PACKAGES[@]}"
-    "${AUR_RETODEV_PACKAGES[@]}"
-)
+# All packages combined (default to essential)
+ALL_PACKAGES=("${ESSENTIAL_PACKAGES[@]}")
 
 # Help function
 show_help() {
     cat << EOF
 setup-local-repo.sh - Build local pacman repository for RetroGameStation
 
-Usage: $0 [OPTIONS]
+Usage: \$0 [OPTIONS]
 
 Options:
     -h, --help              Show this help
@@ -134,21 +130,23 @@ Options:
     -j, --jobs N            Parallel build jobs (default: nproc)
     -v, --verbose           Verbose output
     -c, --clean             Clean build directory before building
+    -m, --mode MODE         Build mode: essential (default), full
     -p, --package PKG       Build only specific package (can be used multiple times)
     -s, --skip PKG          Skip specific package (can be used multiple times)
-    --only-gaming           Build only gaming packages
-    --only-re               Build only reverse engineering packages
-    --only-emulators        Build only emulator packages
     --list                  List all packages that would be built
     --no-build              Only download sources, don't build
     --no-repo               Don't create repository database
 
+Modes:
+    essential   Only packages not in official repos (default, ~30 min)
+    full        All packages including duplicates/alternatives (~3 hours)
+
 Examples:
-    $0                      # Build all packages
-    $0 --only-gaming        # Build only gaming packages
-    $0 -p mangohud -p proton-ge-custom  # Build specific packages
-    $0 --list               # List all packages
-    $0 -c -j 8              # Clean build with 8 jobs
+    \$0                      # Build essential packages (default)
+    \$0 --mode full          # Build everything
+    \$0 -m essential -j 8    # Essential with 8 jobs
+    \$0 -p mangohud -p goverlay  # Build specific packages
+    \$0 --list               # List all packages
 
 EOF
 }
@@ -191,6 +189,10 @@ parse_args() {
                 CLEAN_BUILD=true
                 shift
                 ;;
+            -m|--mode)
+                MODE="$2"
+                shift 2
+                ;;
             -p|--package)
                 ONLY_PACKAGES+=("$2")
                 shift 2
@@ -198,18 +200,6 @@ parse_args() {
             -s|--skip)
                 SKIP_PACKAGES+=("$2")
                 shift 2
-                ;;
-            --only-gaming)
-                ALL_PACKAGES=("${AUR_GAMING_PACKAGES[@]}")
-                shift
-                ;;
-            --only-re)
-                ALL_PACKAGES=("${AUR_RE_PACKAGES[@]}")
-                shift
-                ;;
-            --only-emulators)
-                ALL_PACKAGES=("${AUR_EMULATOR_PACKAGES[@]}")
-                shift
                 ;;
             --list)
                 list_packages
@@ -228,25 +218,32 @@ parse_args() {
                 show_help
                 exit 1
                 ;;
-        esac
-    done
+        esac    done
+    
+    # Select package list based on mode
+    case $MODE in
+        essential)
+            ALL_PACKAGES=("${ESSENTIAL_PACKAGES[@]}")
+            ;;
+        full)
+            ALL_PACKAGES=("${FULL_PACKAGES[@]}")
+            ;;
+        *)
+            print_error "Invalid mode: $MODE (use: essential, full)"
+            exit 1
+            ;;
+    esac
 }
 
 # List all packages
 list_packages() {
-    echo -e "${CYAN}Gaming Packages:${NC}"
-    printf '  %s\n' "${AUR_GAMING_PACKAGES[@]}"
+    echo -e "${CYAN}ESSENTIAL Packages (default mode):${NC}"
+    printf '  %s\n' "${ESSENTIAL_PACKAGES[@]}"
     echo ""
-    echo -e "${CYAN}Retrodev Tools (RE + Emulators):${NC}"
-    printf '  %s\n' "${AUR_RETODEV_PACKAGES[@]}"
+    echo -e "${CYAN}FULL Packages (--mode full):${NC}"
+    printf '  %s\n' "${FULL_PACKAGES[@]}"
     echo ""
-    echo -e "${CYAN}Reverse Engineering:${NC}"
-    printf '  %s\n' "${AUR_RE_PACKAGES[@]}"
-    echo ""
-    echo -e "${CYAN}Emulators:${NC}"
-    printf '  %s\n' "${AUR_EMULATOR_PACKAGES[@]}"
-    echo ""
-    echo -e "${GREEN}Total: $((${#AUR_GAMING_PACKAGES[@]} + ${#AUR_RETODEV_PACKAGES[@]})) packages${NC}"
+    echo -e "${GREEN}Essential: ${#ESSENTIAL_PACKAGES[@]} packages | Full: ${#FULL_PACKAGES[@]} packages${NC}"
 }
 
 # Check if package should be built

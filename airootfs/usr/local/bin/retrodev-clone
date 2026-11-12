@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+#
+# retrodev-clone - Clone development repositories (recomps, decomps, tools)
+# Run: retrodev-clone
+#
+
+set -euo pipefail
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+print_info() { echo -e "${BLUE}[INFO]${NC} $*"; }
+print_success() { echo -e "${GREEN}[SUCCESS]${NC} $*"; }
+print_warning() { echo -e "${YELLOW}[WARNING]${NC} $*"; }
+print_error() { echo -e "${RED}[ERROR]${NC} $*"; }
+print_step() { echo -e "${MAGENTA}[STEP]${NC} $*"; }
+
+# Check internet
+if ! ping -c 1 -W 2 8.8.8.8 &>/dev/null; then
+    print_error "No internet connection!"
+    exit 1
+fi
+
+# Base directory
+BASE_DIR="${HOME}/RetroDev"
+mkdir -p "$BASE_DIR"/{SDKs,Recomps,Decomps,Tools,Engines}
+
+# Repository definitions
+declare -A RECOMPS=(
+    ["soh"]="https://github.com/HarbourMasters/Shipwright|Ship of Harkinian (OOT Recomp)"
+    ["mario64"]="https://github.com/fgsfdsfgs/mario64|Mario 64 PC Port"
+    ["zelda64"]="https://github.com/zelda-enthusiasts/z64|Zelda 64 Recomp"
+    ["mk64"]="https://github.com/MK64/mk64|Mario Kart 64 Recomp"
+    ["sf64"]="https://github.com/starfox64/pc|Star Fox 64 Recomp"
+    ["pd"]="https://github.com/project-rare/pd|Perfect Dark Recomp"
+)
+
+declare -A DECOMPS=(
+    ["sm64"]="https://github.com/n64decomp/sm64|Super Mario 64 Decomp"
+    ["oot"]="https://github.com/zelda-enthusiasts/oot|OOT Decomp"
+    ["mm"]="https://github.com/zelda-enthusiasts/mm|Majora's Mask Decomp"
+    ["pokered"]="https://github.com/pret/pokered|Pokemon Red/Blue Decomp"
+    ["pokecrystal"]="https://github.com/pret/pokecrystal|Pokemon Crystal Decomp"
+    ["pokeemerald"]="https://github.com/pret/pokeemerald|Pokemon Emerald Decomp"
+    ["alttp"]="https://github.com/pret/alttp|Zelda ALTTP Decomp"
+    ["metroid"]="https://github.com/pret/metroid|Metroid Decomp"
+    ["dk64"]="https://github.com/dk64decomp/dk64|Donkey Kong 64 Decomp"
+    ["banjo"]="https://github.com/banjo-decomp/banjo|Banjo-Kazooie Decomp"
+)
+
+declare -A ENGINES=(
+    ["openmw"]="https://github.com/OpenMW/openmw|OpenMW (Morrowind Engine)"
+    ["openra"]="https://github.com/OpenRA/OpenRA|OpenRA (C&C, Red Alert)"
+    ["devilutionx"]="https://github.com/diasurgical/devilutionX|DevilutionX (Diablo 1)"
+    ["openrct2"]="https://github.com/OpenRCT2/OpenRCT2|OpenRCT2 (RollerCoaster Tycoon 2)"
+    ["openttd"]="https://github.com/OpenTTD/OpenTTD|OpenTTD"
+    ["corsixth"]="https://github.com/CorsixTH/CorsixTH|CorsixTH (Theme Hospital)"
+    ["openxcom"]="https://github.com/OpenXcom/OpenXcom|OpenXcom (X-COM)"
+    ["vcmi"]="https://github.com/vcmi/vcmi|VCMI (Heroes 3 Engine)"
+    ["gemrb"]="https://github.com/gemrb/gemrb|GemRB (Infinity Engine)"
+    ["scummvm"]="https://github.com/scummvm/scummvm|ScummVM"
+)
+
+declare -A TOOLS=(
+    ["assetripper"]="https://github.com/AssetRipper/AssetRipper|AssetRipper (Unity/Unreal assets)"
+    ["quickbms"]="https://github.com/aluigi/quickbms|QuickBMS (Archive extractor)"
+    ["vgmstream"]="https://github.com/vgmstream/vgmstream|VGMStream (Audio player/extractor)"
+    ["texconv"]="https://github.com/microsoft/DirectXTex|TexConv (Texture converter)"
+    ["gltfpack"]="https://github.com/zeux/meshoptimizer|gltfpack (GLTF optimizer)"
+    ["meshoptimizer"]="https://github.com/zeux/meshoptimizer|MeshOptimizer"
+    ["ktx"]="https://github.com/KhronosGroup/KTX-Software|KTX Tools"
+    ["basisu"]="https://github.com/BinomialLLC/basis_universal|Basis Universal (Texture compression)"
+    ["astcenc"]="https://github.com/ARM-software/astc-encoder|ASTC Encoder"
+)
+
+show_menu() {
+    clear
+    echo -e "${CYAN}"
+    cat << 'EOF'
+╔══════════════════════════════════════════════════════════════════╗
+║         RetroGameStation - Repository Cloner                      ║
+║         Clone Recomps, Decomps, Engines & Tools                  ║
+╚══════════════════════════════════════════════════════════════════╝
+EOF
+    echo -e "${NC}"
+    echo -e "Directory: ${GREEN}$BASE_DIR${NC}"
+    echo ""
+    echo "Categories:"
+    echo "  1) Recomps (PC Native Ports)"
+    echo "  2) Decomps (Decompilations)"
+    echo "  3) Engines (Open Source Reimplementations)"
+    echo "  4) Tools (Asset Extractors, Converters)"
+    echo "  5) All Categories"
+    echo "  q) Quit"
+    echo ""
+    echo -n "Select category [1-5/q]: "
+}
+
+clone_repo() {
+    local url="$1"
+    local dest="$2"
+    local name="$3"
+    
+    if [[ -d "$dest" ]]; then
+        print_info "$name already exists, pulling latest..."
+        cd "$dest"
+        git pull --ff-only 2>/dev/null || print_warning "Could not pull $name (local changes?)"
+    else
+        print_info "Cloning $name..."
+        git clone --depth=1 "$url" "$dest" 2>/dev/null || {
+            print_warning "Failed to clone $name (trying full clone...)"
+            git clone "$url" "$dest" || print_error "Failed to clone $name"
+        }
+    fi
+}
+
+clone_category() {
+    local -n repos=$1
+    local category="$2"
+    local dest_base="$3"
+    
+    print_step "Cloning $category repositories..."
+    local count=0
+    for key in "${!repos[@]}"; do
+        IFS='|' read -r url desc <<< "${repos[$key]}"
+        local dest="$dest_base/$key"
+        clone_repo "$url" "$dest" "$desc"
+        ((count++))
+    done
+    print_success "Cloned $count $category repositories"
+}
+
+main() {
+    if ! ping -c 1 -W 2 8.8.8.8 &>/dev/null; then
+        print_error "No internet connection!"
+        exit 1
+    fi
+    
+    while true; do
+        show_menu
+        read -r choice
+        
+        case $choice in
+            1) clone_category RECOMPS "Recomps" "$BASE_DIR/Recomps" ;;
+            2) clone_category DECOMPS "Decomps" "$BASE_DIR/Decomps" ;;
+            3) clone_category ENGINES "Engines" "$BASE_DIR/Engines" ;;
+            4) clone_category TOOLS "Tools" "$BASE_DIR/Tools" ;;
+            5) 
+                clone_category RECOMPS "Recomps" "$BASE_DIR/Recomps"
+                clone_category DECOMPS "Decomps" "$BASE_DIR/Decomps"
+                clone_category ENGINES "Engines" "$BASE_DIR/Engines"
+                clone_category TOOLS "Tools" "$BASE_DIR/Tools"
+                ;;
+            q|Q) print_info "Exiting..."; exit 0 ;;
+            *) print_warning "Invalid choice"; sleep 1 ;;
+        esac
+        
+        echo ""
+        print_info "Done! Repositories cloned to $BASE_DIR"
+        echo ""
+        print_info "Structure:"
+        echo "  $BASE_DIR/Recomps/   - PC Native Ports (SOH, Mario64, etc)"
+        echo "  $BASE_DIR/Decomps/   - Decompilations (SM64, OOT, Pokemon, etc)"
+        echo "  $BASE_DIR/Engines/   - Open Source Engines (OpenMW, OpenRCT2, etc)"
+        echo "  $BASE_DIR/Tools/     - Asset Tools (AssetRipper, QuickBMS, etc)"
+        echo ""
+        print_info "Next steps:"
+        echo "  cd ~/RetroDev/Recomps/soh && cmake -B build && ninja -C build"
+        echo "  cd ~/RetroDev/Decomps/sm64 && make VERSION=us COMPARE=1"
+        echo ""
+        read -n 1 -s -r -p "Press any key to continue..."
+    done
+}
+
+main "$@"

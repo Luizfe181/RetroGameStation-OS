@@ -35,12 +35,12 @@ jobs:
           # Set up build directory permissions
           chown -R builder:builder /__w/RetroGameStation-OS
 
-      - name: Build local repo (gaming + RE + emulators)
+      - name: Build local repo (essential packages only)
         run: |
           sudo -u builder bash -c '
             cd /__w/RetroGameStation-OS/RetroGameStation-OS
             chmod +x scripts/setup-local-repo.sh
-            ./scripts/setup-local-repo.sh
+            ./scripts/setup-local-repo.sh --mode essential
           '
 
       - name: Build ISO

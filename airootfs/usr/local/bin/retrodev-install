@@ -1,0 +1,283 @@
+#!/usr/bin/env bash
+#
+# retrodev-install - Interactive menu to install development toolchains
+# Run after installation: sudo retrodev-install
+#
+
+set -euo pipefail
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+print_info() { echo -e "${BLUE}[INFO]${NC} $*"; }
+print_success() { echo -e "${GREEN}[SUCCESS]${NC} $*"; }
+print_warning() { echo -e "${YELLOW}[WARNING]${NC} $*"; }
+print_error() { echo -e "${RED}[ERROR]${NC} $*"; }
+print_step() { echo -e "${MAGENTA}[STEP]${NC} $*"; }
+
+# Check root
+if [[ $EUID -ne 0 ]]; then
+    print_error "This script must be run as root (use sudo)"
+    exit 1
+done
+
+# Check internet
+check_internet() {
+    if ping -c 1 -W 2 8.8.8.8 &>/dev/null; then
+        return 0
+    else
+        print_error "No internet connection! Required for downloading packages."
+        return 1
+    fi
+}
+
+# Console definitions
+declare -A CONSOLES=(
+    ["ps2"]="PlayStation 2|PS2SDK, gsKit, ps2dev|850|ps2sdk ps2dev ps2toolchain gsKit|PS2SDK=/opt/ps2sdk PS2DEV=/opt/ps2dev PS2TOOLCHAIN=/opt/ps2toolchain"
+    ["ps1"]="PlayStation 1|PSYQ, PSn00bSDK|420|psyq psn00bsdk psxsdk|PSYQ=/opt/psyq PSN00BSDK=/opt/psn00bsdk"
+    ["psp"]="PlayStation Portable|PSPSDK, pspdev|680|pspsdk pspdev psplibraries|PSPSDK=/opt/pspsdk"
+    ["vita"]="PlayStation Vita|VitaSDK, vita2d|520|vitasdk vita2d vitashark|VITASDK=/opt/vitasdk"
+    ["gc_wii"]="GameCube / Wii|devkitPPC, libogc, libfat|1200|devkitppc libogc libfat-ogc devkitpro-portlibs-ppc|DEVKITPPC=/opt/devkitpro/devkitPPC DEVKITPRO=/opt/devkitpro LIBOGC=/opt/devkitpro/libogc"
+    ["gba"]="Game Boy Advance|devkitARM, libgba, libfat|380|devkitarm libgba libfat tonclib|DEVKITARM=/opt/devkitpro/devkitARM"
+    ["nds"]="Nintendo DS|devkitARM, libnds, dswifi|420|devkitarm libnds dswifi maxmod|DEVKITARM=/opt/devkitpro/devkitARM"
+    ["3ds"]="Nintendo 3DS|ctru, citro3d, citro2d|560|ctru citro3d citro2d devkitpro-portlibs-3ds|CTRULIB=/opt/devkitpro/ctru"
+    ["switch"]="Nintendo Switch|libnx, portlibs|980|libnx devkitpro-portlibs-switch mesa-nx|LIBNX=/opt/libnx DEVKITPRO=/opt/devkitpro"
+    ["n64"]="Nintendo 64|libdragon, n64chain|650|libdragon n64chain|LIBDRAGON=/opt/libdragon N64CHAIN=/opt/n64chain"
+    ["dreamcast"]="Dreamcast|KOS, kos-ports|720|kos kos-ports kos-utils|KOS_BASE=/opt/kos KOS_PORTS=/opt/kos-ports"
+    ["saturn"]="Saturn|saturn-dev, saturn-orb|480|saturn-dev saturn-orb|SATURN_DEV=/opt/saturn-dev"
+    ["genesis"]="Genesis / Mega Drive|SGDK|180|sgdk|SGDK=/opt/sgdk"
+)
+
+# Display menu
+show_menu() {
+    clear
+    echo -e "${CYAN}"
+    cat << 'EOF'
+╔══════════════════════════════════════════════════════════════════╗
+║         RetroGameStation - Development Environment Setup         ║
+║         Select consoles to install SDKs and Toolchains           ║
+╚══════════════════════════════════════════════════════════════════╝
+EOF
+    echo -e "${NC}"
+    
+    echo -e "${YELLOW}Select consoles to install SDKs/Toolchains:${NC}"
+    echo ""
+    
+    local i=1
+    local console_ids=()
+    for id in "${!CONSOLES[@]}"; do
+        console_ids+=("$id")
+    done
+    
+    # Sort for consistent display
+    IFS=$'\n' console_ids=($(sort <<<"${console_ids[*]}"))
+    
+    for id in "${console_ids[@]}"; do
+        IFS='|' read -r name desc size packages env <<< "${CONSOLES[$id]}"
+        local status="[ ]"
+        # Check if already installed (check for env var in /etc/profile.d)
+        if grep -q "$id" /etc/profile.d/retrodev-consoles.sh 2>/dev/null || \
+           grep -q "$(echo $packages | awk '{print $1}')" /var/lib/pacman/local/*/desc 2>/dev/null; then
+            status="${GREEN}[✓]${NC}"
+        fi
+        printf "  %2d. %s %-20s (%s) - %s MB\n" "$i" "$status" "$name" "$desc" "$size"
+        ((i++))
+    done
+    
+    echo ""
+    echo -e "${YELLOW}Categories:${NC}"
+    echo "  a) Select All"
+    echo "  n) None (Cancel)"
+    echo "  r) Recommended (PS2, GC/Wii, GBA, NDS, Switch, N64, Dreamcast)"
+    echo "  s) Sony Only (PS2, PS1, PSP, Vita)"
+    echo "  n) Nintendo Only (GC/Wii, GBA, NDS, 3DS, Switch, N64)"
+    echo "  g) Sega Only (Dreamcast, Saturn, Genesis)"
+    echo "  q) Quit"
+    echo ""
+    echo -n "Enter selection (numbers, comma-separated, or category letter): "
+}
+
+# Parse selection
+parse_selection() {
+    local input="$1"
+    local selected=()
+    local console_ids=()
+    
+    for id in "${!CONSOLES[@]}"; do
+        console_ids+=("$id")
+    done
+    IFS=$'\n' console_ids=($(sort <<<"${console_ids[*]}"))
+    
+    # Handle category shortcuts
+    case "$input" in
+        a|A)
+            selected=("${console_ids[@]}")
+            ;;
+        r|R)
+            selected=("ps2" "gc_wii" "gba" "nds" "switch" "n64" "dreamcast")
+            ;;
+        s|S)
+            selected=("ps2" "ps1" "psp" "vita")
+            ;;
+        n|N)
+            if [[ "$input" =~ ^[0-9] ]]; then
+                # Number input, not category
+            else
+                selected=("gc_wii" "gba" "nds" "3ds" "switch" "n64")
+            fi
+            ;;
+        g|G)
+            selected=("dreamcast" "saturn" "genesis")
+            ;;
+        q|Q)
+            exit 0
+            ;;
+        *)
+            # Parse comma-separated numbers
+            IFS=',' read -ra nums <<< "$input"
+            for num in "${nums[@]}"; do
+                num=$(echo "$num" | xargs) # trim
+                if [[ "$num" =~ ^[0-9]+$ ]] && (( num >= 1 && num <= ${#console_ids[@]} )); then
+                    selected+=("${console_ids[$((num-1))]}")
+                fi
+            done
+            ;;
+    esac
+    
+    echo "${selected[@]}"
+}
+
+# Install selected consoles
+install_consoles() {
+    local selected=("$@")
+    local total=${#selected[@]}
+    local current=0
+    
+    if [[ $total -eq 0 ]]; then
+        print_warning "Nothing selected."
+        return 1
+    fi
+    
+    print_step "Installing $total console SDK(s)..."
+    echo ""
+    
+    # Update package database first
+    print_info "Updating package database..."
+    pacman -Sy
+    
+    # Collect all packages to install
+    local all_packages=()
+    local all_env_vars=()
+    
+    for id in "${selected[@]}"; do
+        IFS='|' read -r name desc size packages env <<< "${CONSOLES[$id]}"
+        for pkg in $packages; do
+            all_packages+=("$pkg")
+        done
+        all_env_vars+=("$env")
+    done
+    
+    # Remove duplicates
+    IFS=' ' read -ra unique_packages <<< "$(printf '%s\n' "${all_packages[@]}" | sort -u)"
+    
+    print_info "Installing ${#unique_packages[@]} packages: ${unique_packages[*]}"
+    
+    # Install packages
+    pacman -Sy --noconfirm --needed "${unique_packages[@]}" || {
+        print_error "Some packages failed to install. Check output above."
+        return 1
+    }
+    
+    # Write environment file
+    print_step "Configuring environment variables..."
+    {
+        echo "# RetroGameStation Console Development Environment"
+        echo "# Generated by retrodev-install on $(date)"
+        for env in "${all_env_vars[@]}"; do
+            echo "export $env"
+        done
+    } > /etc/profile.d/retrodev-consoles.sh
+    
+    # Create symlinks in ~/RetroDev/SDKs
+    print_step "Creating symlinks in ~/RetroDev/SDKs..."
+    local gamer_home="/home/gamer"
+    if [[ -d "$gamer_home" ]]; then
+        mkdir -p "$gamer_home/RetroDev/SDKs"
+        for id in "${selected[@]}"; do
+            IFS='|' read -r name desc size packages env <<< "${CONSOLES[$id]}"
+            local first_pkg=$(echo "$packages" | awk '{print $1}')
+            case $id in
+                ps2) ln -sfn /opt/ps2sdk "$gamer_home/RetroDev/SDKs/ps2" ;;
+                gc_wii) ln -sfn /opt/devkitpro "$gamer_home/RetroDev/SDKs/devkitpro" ;;
+                switch) ln -sfn /opt/libnx "$gamer_home/RetroDev/SDKs/nx" ;;
+                n64) ln -sfn /opt/libdragon "$gamer_home/RetroDev/SDKs/n64" ;;
+                dreamcast) ln -sfn /opt/kos "$gamer_home/RetroDev/SDKs/kos" ;;
+                ps1) ln -sfn /opt/psyq "$gamer_home/RetroDev/SDKs/ps1" ;;
+                psp) ln -sfn /opt/pspsdk "$gamer_home/RetroDev/SDKs/psp" ;;
+                vita) ln -sfn /opt/vitasdk "$gamer_home/RetroDev/SDKs/vita" ;;
+                *) 
+                    # Generic symlink for first package path
+                    local pkg_path=$(pacman -Ql "$first_pkg" 2>/dev/null | grep -E "^$first_pkg /opt/" | head -1 | awk '{print $2}' | xargs dirname)
+                    if [[ -n "$pkg_path" && -d "$pkg_path" ]]; then
+                        ln -sfn "$pkg_path" "$gamer_home/RetroDev/SDKs/$id"
+                    fi
+                    ;;
+            esac
+        done
+        chown -R gamer:gamer "$gamer_home/RetroDev"
+    fi
+    
+    print_success "Successfully installed $total console SDK(s)!"
+    print_info "Environment variables saved to /etc/profile.d/retrodev-consoles.sh"
+    print_info "Symlinks created in ~/RetroDev/SDKs/"
+    print_warning "Reboot or run 'source /etc/profile.d/retrodev-consoles.sh' to apply changes."
+}
+
+# Main loop
+main() {
+    if ! check_internet; then
+        exit 1
+    fi
+    
+    # Update package database
+    print_info "Updating package database..."
+    pacman -Sy
+    
+    while true; do
+        show_menu
+        read -r input
+        selected=($(parse_selection "$input"))
+        
+        if [[ ${#selected[@]} -eq 0 ]]; then
+            if [[ "$input" =~ ^[qQ]$ ]]; then
+                print_info "Exiting..."
+                exit 0
+            else
+                print_warning "Invalid selection. Try again."
+                sleep 1
+                continue
+            fi
+        fi
+        
+        # Show what will be installed
+        echo ""
+        print_info "Selected: ${selected[*]}"
+        echo -n "Confirm installation? [y/N]: "
+        read -r confirm
+        if [[ ! "$confirm" =~ ^[yY]$ ]]; then
+            print_info "Cancelled."
+            sleep 1
+            continue
+        fi
+        
+        install_consoles "${selected[@]}"
+        break
+    done
+}
+
+main "$@"
