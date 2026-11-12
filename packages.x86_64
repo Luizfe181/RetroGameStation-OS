@@ -173,7 +173,6 @@ powerdevil
 print-manager
 sddm
 sddm-kcm
-user-manager
 xdg-desktop-portal-kde
 
 # =============================================================================
@@ -352,7 +351,6 @@ python-unicorn
 python-z3-solver
 python-pwntools
 python-ropper
-python-checksec
 
 # =============================================================================
 # UTILITIES & TOOLS
