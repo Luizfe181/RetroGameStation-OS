@@ -341,6 +341,12 @@ ruby
 lua
 luarocks
 
+# AI Coding Assistant
+opencode
+ruby
+lua
+luarocks
+
 # =============================================================================
 # RETROCONSOLE DEVELOPMENT TOOLCHAINS
 # =============================================================================
