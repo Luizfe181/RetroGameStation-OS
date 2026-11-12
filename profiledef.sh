@@ -44,6 +44,7 @@ systemd_services=(
   'steam-firstboot.service'
   'gamescope-session.service'
   'retrodev-env-setup.service'
+  'retrogamestation-boot-video.service'
 )
 
 # Profile-specific settings

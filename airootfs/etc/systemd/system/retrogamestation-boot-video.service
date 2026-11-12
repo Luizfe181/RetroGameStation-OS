@@ -1,0 +1,20 @@
+[Unit]
+Description=RetroGameStation Boot Video with Audio
+Documentation=https://github.com/Luizfe181/RetroGameStation-OS
+After=graphical.target pipewire.socket wireplumber.service systemd-user-sessions.service
+Before=gamescope-session.service steam-firstboot.service
+Wants=pipewire.socket wireplumber.service
+ConditionPathExists=/usr/share/retrogamestation/boot-video.mp4
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/play-boot-video-ffplay
+TimeoutSec=180
+Nice=-5
+IOSchedulingClass=realtime
+IOSchedulingPriority=0
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=graphical.target

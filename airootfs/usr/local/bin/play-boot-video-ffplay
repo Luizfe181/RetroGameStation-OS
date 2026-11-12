@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# /usr/local/bin/play-boot-video-ffplay
+# RetroGameStation - Cinematic boot video with audio
+# Uses ffplay (from ffmpeg) for zero extra dependencies
+
+set -euo pipefail
+
+VIDEO="/usr/share/retrogamestation/boot-video.mp4"
+PLYMOUTH_STILL="/usr/share/retrogamestation/plymouth-still.png"
+
+# 1. Gracefully stop Plymouth if running
+# --retain-splash keeps the last frame on screen for smooth handoff
+if command -v plymouth >/dev/null 2>&1; then
+    plymouth quit --retain-splash 2>/dev/null || true
+fi
+
+# 2. Brief delay for clean framebuffer handoff (DRM/KMS)
+sleep 0.3
+
+# 3. Play video with audio using ffplay
+# -autoexit: quit when done
+# -fs: fullscreen
+# -noborder: no window decorations
+# -loglevel quiet: suppress ffmpeg spam
+# -sync ext: sync to external clock (smoother)
+# -ast 0: first audio track
+# -vf: scale/pad to 1920x1080 preserving aspect (black bars if needed)
+# -vn/-an: disable video/audio if needed (not used here)
+exec ffplay -autoexit -fs -noborder \
+    -loglevel quiet \
+    -sync ext \
+    -ast 0 \
+    -vf "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=black" \
+    "$VIDEO" 2>/dev/null
+
+# 4. Fallback if first attempt fails (e.g. scale filter issue)
+exit_code=$?
+if [ $exit_code -ne 0 ]; then
+    ffplay -autoexit -fs -noborder -loglevel quiet "$VIDEO" 2>/dev/null || true
+fi
