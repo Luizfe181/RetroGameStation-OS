@@ -15,6 +15,12 @@ jobs:
       packages: write
       actions: write
     
+    container:
+      image: archlinux:latest
+      options: --privileged
+      volumes:
+        - /tmp:/tmp
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,7 +29,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo pacman -Sy --noconfirm archiso git base-devel devtools
+          pacman -Sy --noconfirm archiso git base-devel devtools
 
       - name: Build local repo (retrodev toolchains)
         run: |
@@ -35,7 +41,7 @@ jobs:
         run: |
           cd archiso-profile
           chmod +x build.sh
-          sudo ./build.sh --no-local-repo
+          ./build.sh --no-local-repo
 
       - name: Upload ISO artifact
         uses: actions/upload-artifact@v4
