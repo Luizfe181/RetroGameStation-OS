@@ -189,7 +189,6 @@ lib32-pipewire-jack
 wireplumber
 libwireplumber
 gst-plugin-pipewire
-lib32-gst-plugin-pipewire
 realtime-privileges
 sof-firmware
 alsa-firmware
@@ -230,7 +229,6 @@ lib32-gamemode
 mangohud
 lib32-mangohud
 vkbasalt
-lib32-vkbasalt
 vkd3d
 lib32-vkd3d
 wine
@@ -294,7 +292,6 @@ ghidra
 radare2
 cutter
 gdb
-pwntools
 ropper
 ropgadget
 checksec
@@ -304,42 +301,31 @@ unicorn
 z3
 binwalk
 squashfs-tools
-ubi-reader
 mtd-utils
 flashrom
 
 # =============================================================================
 # EMULATORS (official repos - stable versions)
 # =============================================================================
-pcsx2
-duckstation
-citra
 ppsspp
-rpcs3
 dolphin-emu
 mupen64plus
-parallel-n64
-ares
 mednafen
 retroarch
 # Libretro cores available in extra
 libretro-beetle-psx
 libretro-dolphin
-libretro-mupen64plus
 libretro-parallel-n64
 libretro-ppsspp
 libretro-snes9x
 libretro-mgba
 libretro-gambatte
 libretro-genesis-plus-gx
-libretro-fceumm
 libretro-nestopia
 libretro-desmume
 libretro-flycast
 libretro-kronos
 libretro-yabause
-libretro-beetle-saturn
-fbneo
 
 # =============================================================================
 # PYTHON TOOLS FOR RETRODEV/RE
@@ -349,7 +335,6 @@ python-capstone
 python-keystone
 python-unicorn
 python-z3-solver
-python-pwntools
 python-ropper
 
 # =============================================================================
@@ -406,7 +391,6 @@ virglrenderer
 libvirt
 libvirt-glib
 libvirt-python
-python-libvirt
 
 # =============================================================================
 # FONTS & THEMES
@@ -509,21 +493,15 @@ tpm2-abrmd
 fwupd
 fwupd-efi
 libfido2
-ykman
 opensc
 ccid
 pcsc-tools
-pcsc-lite
 
 # =============================================================================
 # LOCALIZATION (Portuguese Brazil)
 # =============================================================================
 man-pages-pt_br
 aspell-pt
-aspell-pt_br
-hunspell-pt_br
-mythes-pt_br
-hyphen-pt_br
 libreoffice-fresh-pt-br
 firefox-i18n-pt-br
 thunderbird-i18n-pt-br
