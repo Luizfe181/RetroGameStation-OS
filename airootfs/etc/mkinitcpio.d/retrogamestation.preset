@@ -1,0 +1,19 @@
+# mkinitcpio preset for RetroGameStation
+# /etc/mkinitcpio.d/retrogamestation.preset
+
+ALL_config="/etc/mkinitcpio.conf"
+ALL_kver="/boot/vmlinuz-linux"
+
+ALL_microcode=(/boot/*-ucode.img)
+
+PRESETS=('default' 'fallback')
+
+default_config="/etc/mkinitcpio.conf"
+default_image="/boot/initramfs-linux.img"
+default_uki="/efi/EFI/RetroGameStation/retrogamestation-linux.efi"
+default_options="-S autodetect -S keyboard"
+
+fallback_config="/etc/mkinitcpio.conf"
+fallback_image="/boot/initramfs-linux-fallback.img"
+fallback_uki="/efi/EFI/RetroGameStation/retrogamestation-linux-fallback.efi"
+fallback_options="-S autodetect"

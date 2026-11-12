@@ -1,0 +1,81 @@
+[user]
+	name = RetroGamer
+	email = gamer@retrogamestation.local
+
+[core]
+	editor = nvim
+	pager = delta
+	autocrlf = input
+	safecrlf = true
+	whitespace = trailing-space,space-before-tab
+	excludesfile = ~/.gitignore_global
+
+[color]
+	ui = auto
+
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+
+[color "status"]
+	added = green
+	changed = yellow
+	untracked = red
+
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+	lg = log --oneline --graph --decorate --all
+	ll = log --pretty=format:"%C(yellow)%h %C(blue)%ad %C(red)%d %C(reset)%s %C(green)[%an]" --date=short
+	la = log --pretty=format:"%C(yellow)%h %C(blue)%ad %C(red)%d %C(reset)%s %C(green)[%an]" --date=short --all
+	unstage = reset HEAD --
+	last = log -1 HEAD
+	visual = !gitk
+	amend = commit --amend --no-edit
+	undo = reset --soft HEAD~1
+	clean-branches = !git branch --merged | grep -v "\\*\\|master\\|main\\|develop" | xargs -n 1 git branch -d
+
+[push]
+	default = simple
+	followTags = true
+
+[pull]
+	rebase = true
+	ff = only
+
+[merge]
+	tool = nvimdiff
+	conflictstyle = diff3
+
+[diff]
+	tool = nvimdiff
+	algorithm = histogram
+
+[init]
+	defaultBranch = main
+
+[fetch]
+	prune = true
+
+[gc]
+	auto = 256
+
+[rebase]
+	autostash = true
+
+[credential]
+	helper = cache --timeout=3600
+
+[commit]
+	gpgsign = false
+	template = ~/.gitmessage
+
+[includeIf "gitdir:~/Development/"]
+	path = ~/.gitconfig-work
+
+[includeIf "gitdir:~/RetroDev/"]
+	path = ~/.gitconfig-retrodev

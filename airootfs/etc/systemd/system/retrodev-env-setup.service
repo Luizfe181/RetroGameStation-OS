@@ -1,0 +1,102 @@
+[Unit]
+Description=RetroGameStation - Retrodev Environment Setup
+Documentation=https://github.com/retrogamestation
+After=local-fs.target
+Before=gamescope-session.service
+ConditionPathExists=/opt/ps2sdk
+ConditionPathExists=/opt/devkitpro
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=root
+Group=root
+# Create toolchain directories if they don't exist
+ExecStartPre=/usr/bin/mkdir -p /opt/ps2sdk /opt/ps2dev /opt/ps2toolchain /opt/ps2client /opt/ps2link /opt/ps2netfs /opt/ps2pm /opt/ps2vfs
+ExecStartPre=/usr/bin/mkdir -p /opt/devkitpro /opt/devkitpro/devkitPPC /opt/devkitpro/devkitARM /opt/devkitpro/libogc /opt/devkitpro/libnds /opt/devkitpro/libgba /opt/devkitpro/libfat /opt/devkitpro/dswifi /opt/devkitpro/maxmod /opt/devkitpro/tonclib /opt/devkitpro/grit /opt/devkitpro/mmutil /opt/devkitpro/liblcf /opt/devkitpro/ctru /opt/devkitpro/citro3d /opt/devkitpro/citro2d /opt/devkitpro/sf2dlib /opt/devkitpro/cpp3ds /opt/devkitpro/portlibs
+ExecStartPre=/usr/bin/mkdir -p /opt/kos /opt/kos-ports /opt/kos-utils
+ExecStartPre=/usr/bin/mkdir -p /opt/saturn-dev /opt/saturn-orb /opt/saturn-sgl /opt/saturn-sbl
+ExecStartPre=/usr/bin/mkdir -p /opt/psyq /opt/psn00bsdk /opt/psxsdk
+ExecStartPre=/usr/bin/mkdir -p /opt/libdragon /opt/n64chain /opt/n64sdk
+ExecStartPre=/usr/bin/mkdir -p /opt/pspsdk /opt/pspdev /opt/psp-toolchain /opt/psplibraries /opt/pspplayer /opt/pspgl /opt/pspmp4 /opt/pspaudio /opt/pspkernel /opt/pspdebug
+ExecStartPre=/usr/bin/mkdir -p /opt/vitasdk /opt/vitashark /opt/vita2d
+ExecStartPre=/usr/bin/mkdir -p /opt/libnx /opt/switch-dev /opt/switch-tools /opt/mesa-nx /opt/libtransistor
+ExecStartPre=/usr/bin/mkdir -p /opt/ida /opt/binaryninja /opt/ghidra
+
+# Set permissions for gamer user
+ExecStartPre=/usr/bin/chown -R gamer:gamer /opt/ps2sdk /opt/ps2dev /opt/ps2toolchain /opt/ps2client /opt/ps2link /opt/ps2netfs /opt/ps2pm /opt/ps2vfs 2>/dev/null || true
+ExecStartPre=/usr/bin/chown -R gamer:gamer /opt/devkitpro 2>/dev/null || true
+ExecStartPre=/usr/bin/chown -R gamer:gamer /opt/kos /opt/kos-ports /opt/kos-utils 2>/dev/null || true
+ExecStartPre=/usr/bin/chown -R gamer:gamer /opt/saturn-dev /opt/saturn-orb /opt/saturn-sgl /opt/saturn-sbl 2>/dev/null || true
+ExecStartPre=/usr/bin/chown -R gamer:gamer /opt/psyq /opt/psn00bsdk /opt/psxsdk 2>/dev/null || true
+ExecStartPre=/usr/bin/chown -R gamer:gamer /opt/libdragon /opt/n64chain /opt/n64sdk 2>/dev/null || true
+ExecStartPre=/usr/bin/chown -R gamer:gamer /opt/pspsdk /opt/pspdev /opt/psp-toolchain /opt/psplibraries 2>/dev/null || true
+ExecStartPre=/usr/bin/chown -R gamer:gamer /opt/vitasdk /opt/vitashark /opt/vita2d 2>/dev/null || true
+ExecStartPre=/usr/bin/chown -R gamer:gamer /opt/libnx /opt/switch-dev /opt/switch-tools /opt/mesa-nx /opt/libtransistor 2>/dev/null || true
+ExecStartPre=/usr/bin/chown -R gamer:gamer /opt/ida /opt/binaryninja /opt/ghidra 2>/dev/null || true
+
+# Create symlinks for easier access
+ExecStart=/usr/bin/ln -sfn /opt/ps2sdk /home/gamer/ps2sdk
+ExecStartPost=/usr/bin/ln -sfn /opt/devkitpro /home/gamer/devkitpro
+ExecStartPost=/usr/bin/ln -sfn /opt/kos /home/gamer/kos
+ExecStartPost=/usr/bin/ln -sfn /opt/libdragon /home/gamer/libdragon
+ExecStartPost=/usr/bin/ln -sfn /opt/libnx /home/gamer/libnx
+
+# Create environment module file for use with environment-modules
+ExecStartPost=/usr/bin/mkdir -p /usr/share/modules/modulefiles/retrodev
+ExecStartPost=/usr/bin/bash -c 'cat > /usr/share/modules/modulefiles/retrodev/ps2sdk << '"'"'EOF'"'"'
+#%Module1.0
+prepend-path PATH /opt/ps2sdk/bin:/opt/ps2dev/bin:/opt/ps2toolchain/bin
+prepend-path C_INCLUDE_PATH /opt/ps2sdk/ee/include:/opt/ps2sdk/common/include
+prepend-path CPLUS_INCLUDE_PATH /opt/ps2sdk/ee/include:/opt/ps2sdk/common/include
+prepend-path LIBRARY_PATH /opt/ps2sdk/ee/lib:/opt/ps2sdk/common/lib
+prepend-path LD_LIBRARY_PATH /opt/ps2sdk/ee/lib:/opt/ps2sdk/common/lib
+prepend-path PKG_CONFIG_PATH /opt/ps2sdk/ee/lib/pkgconfig:/opt/ps2sdk/common/lib/pkgconfig
+setenv PS2SDK /opt/ps2sdk
+setenv PS2DEV /opt/ps2dev
+setenv PS2TOOLCHAIN /opt/ps2toolchain
+EOF'"'"''
+ExecStartPost=/usr/bin/bash -c 'cat > /usr/share/modules/modulefiles/retrodev/devkitppc << '"'"'EOF'"'"'
+#%Module1.0
+prepend-path PATH /opt/devkitpro/devkitPPC/bin
+prepend-path C_INCLUDE_PATH /opt/devkitpro/libogc/include:/opt/devkitpro/portlibs/ppc/include
+prepend-path CPLUS_INCLUDE_PATH /opt/devkitpro/libogc/include:/opt/devkitpro/portlibs/ppc/include
+prepend-path LIBRARY_PATH /opt/devkitpro/libogc/lib/wii:/opt/devkitpro/libogc/lib/cube:/opt/devkitpro/portlibs/ppc/lib
+prepend-path LD_LIBRARY_PATH /opt/devkitpro/libogc/lib/wii:/opt/devkitpro/libogc/lib/cube:/opt/devkitpro/portlibs/ppc/lib
+prepend-path PKG_CONFIG_PATH /opt/devkitpro/portlibs/ppc/lib/pkgconfig
+setenv DEVKITPPC /opt/devkitpro/devkitPPC
+setenv DEVKITPRO /opt/devkitpro
+setenv LIBOGC /opt/devkitpro/libogc
+EOF'"'"''
+ExecStartPost=/usr/bin/bash -c 'cat > /usr/share/modules/modulefiles/retrodev/devkitarm << '"'"'EOF'"'"'
+#%Module1.0
+prepend-path PATH /opt/devkitpro/devkitARM/bin
+prepend-path C_INCLUDE_PATH /opt/devkitpro/libnds/include:/opt/devkitpro/libgba/include:/opt/devkitpro/libfat/include:/opt/devkitpro/portlibs/arm/include
+prepend-path CPLUS_INCLUDE_PATH /opt/devkitpro/libnds/include:/opt/devkitpro/libgba/include:/opt/devkitpro/libfat/include:/opt/devkitpro/portlibs/arm/include
+prepend-path LIBRARY_PATH /opt/devkitpro/libnds/lib:/opt/devkitpro/libgba/lib:/opt/devkitpro/libfat/lib:/opt/devkitpro/portlibs/arm/lib
+prepend-path LD_LIBRARY_PATH /opt/devkitpro/libnds/lib:/opt/devkitpro/libgba/lib:/opt/devkitpro/libfat/lib:/opt/devkitpro/portlibs/arm/lib
+prepend-path PKG_CONFIG_PATH /opt/devkitpro/portlibs/arm/lib/pkgconfig
+setenv DEVKITARM /opt/devkitpro/devkitARM
+setenv DEVKITPRO /opt/devkitpro
+setenv LIBNDS /opt/devkitpro/libnds
+setenv LIBGBA /opt/devkitpro/libgba
+setenv LIBFAT /opt/devkitpro/libfat
+EOF'"'"''
+ExecStartPost=/usr/bin/bash -c 'cat > /usr/share/modules/modulefiles/retrodev/libnx << '"'"'EOF'"'"'
+#%Module1.0
+prepend-path PATH /opt/libnx/bin:/opt/switch-dev/bin:/opt/switch-tools/bin:/opt/devkitpro/devkitARM/bin
+prepend-path C_INCLUDE_PATH /opt/libnx/include:/opt/mesa-nx/include:/opt/libtransistor/include:/opt/devkitpro/portlibs/switch/include
+prepend-path CPLUS_INCLUDE_PATH /opt/libnx/include:/opt/mesa-nx/include:/opt/libtransistor/include:/opt/devkitpro/portlibs/switch/include
+prepend-path LIBRARY_PATH /opt/libnx/lib:/opt/mesa-nx/lib:/opt/libtransistor/lib:/opt/devkitpro/portlibs/switch/lib
+prepend-path LD_LIBRARY_PATH /opt/libnx/lib:/opt/mesa-nx/lib:/opt/libtransistor/lib:/opt/devkitpro/portlibs/switch/lib
+prepend-path PKG_CONFIG_PATH /opt/devkitpro/portlibs/switch/lib/pkgconfig
+setenv LIBNX /opt/libnx
+setenv SWITCH_DEV /opt/switch-dev
+setenv DEVKITPRO /opt/devkitpro
+EOF'"'"''
+
+# Verify toolchains are available
+ExecStartPost=/usr/bin/bash -c 'for tool in ee-gcc ppc-eabi-gcc arm-none-eabi-gcc mips64-elf-gcc sh-elf-gcc riscv64-elf-gcc; do if command -v $tool &>/dev/null; then echo "Found: $tool"; else echo "Missing: $tool"; fi; done' || true
+
+[Install]
+WantedBy=multi-user.target

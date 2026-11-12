@@ -1,0 +1,319 @@
+#!/usr/bin/env bash
+#
+# retrodev-env - Load retroconsole development environment
+# Usage: source retrodev-env [platform]
+# Platforms: ps2, ppc, arm, 3ds, nx, psp, vita, n64, dc, saturn, ps1, all
+#
+
+PLATFORM="${1:-all}"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+print_info() { echo -e "${BLUE}[INFO]${NC} $*"; }
+print_success() { echo -e "${GREEN}[SUCCESS]${NC} $*"; }
+print_warning() { echo -e "${YELLOW}[WARNING]${NC} $*"; }
+
+load_ps2() {
+    if [[ -d /opt/ps2sdk ]]; then
+        export PS2SDK=/opt/ps2sdk
+        export PS2DEV=/opt/ps2dev
+        export PS2TOOLCHAIN=/opt/ps2toolchain
+        export PATH="${PS2SDK}/bin:${PS2DEV}/bin:${PS2TOOLCHAIN}/bin:${PATH}"
+        export C_INCLUDE_PATH="${PS2SDK}/ee/include:${PS2SDK}/common/include:${C_INCLUDE_PATH}"
+        export CPLUS_INCLUDE_PATH="${PS2SDK}/ee/include:${PS2SDK}/common/include:${CPLUS_INCLUDE_PATH}"
+        export LIBRARY_PATH="${PS2SDK}/ee/lib:${PS2SDK}/common/lib:${LIBRARY_PATH}"
+        export LD_LIBRARY_PATH="${PS2SDK}/ee/lib:${PS2SDK}/common/lib:${LD_LIBRARY_PATH}"
+        export PKG_CONFIG_PATH="${PS2SDK}/ee/lib/pkgconfig:${PS2SDK}/common/lib/pkgconfig:${PKG_CONFIG_PATH}"
+        print_success "PS2 SDK environment loaded"
+    else
+        print_warning "PS2 SDK not found at /opt/ps2sdk"
+    fi
+}
+
+load_ppc() {
+    if [[ -d /opt/devkitpro/devkitPPC ]]; then
+        export DEVKITPRO=/opt/devkitpro
+        export DEVKITPPC=/opt/devkitpro/devkitPPC
+        export LIBOGC=/opt/devkitpro/libogc
+        export PORTLIBS_PPC=/opt/devkitpro/portlibs/ppc
+        export PATH="${DEVKITPPC}/bin:${PATH}"
+        export C_INCLUDE_PATH="${LIBOGC}/include:${PORTLIBS_PPC}/include:${C_INCLUDE_PATH}"
+        export CPLUS_INCLUDE_PATH="${LIBOGC}/include:${PORTLIBS_PPC}/include:${CPLUS_INCLUDE_PATH}"
+        export LIBRARY_PATH="${LIBOGC}/lib/wii:${LIBOGC}/lib/cube:${PORTLIBS_PPC}/lib:${LIBRARY_PATH}"
+        export LD_LIBRARY_PATH="${LIBOGC}/lib/wii:${LIBOGC}/lib/cube:${PORTLIBS_PPC}/lib:${LD_LIBRARY_PATH}"
+        export PKG_CONFIG_PATH="${PORTLIBS_PPC}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+        print_success "devkitPPC (GameCube/Wii) environment loaded"
+    else
+        print_warning "devkitPPC not found at /opt/devkitpro/devkitPPC"
+    fi
+}
+
+load_arm() {
+    if [[ -d /opt/devkitpro/devkitARM ]]; then
+        export DEVKITPRO=/opt/devkitpro
+        export DEVKITARM=/opt/devkitpro/devkitARM
+        export LIBNDS=/opt/devkitpro/libnds
+        export LIBGBA=/opt/devkitpro/libgba
+        export LIBFAT=/opt/devkitpro/libfat
+        export PORTLIBS_ARM=/opt/devkitpro/portlibs/arm
+        export PATH="${DEVKITARM}/bin:${PATH}"
+        export C_INCLUDE_PATH="${LIBNDS}/include:${LIBGBA}/include:${LIBFAT}/include:${PORTLIBS_ARM}/include:${C_INCLUDE_PATH}"
+        export CPLUS_INCLUDE_PATH="${LIBNDS}/include:${LIBGBA}/include:${LIBFAT}/include:${PORTLIBS_ARM}/include:${CPLUS_INCLUDE_PATH}"
+        export LIBRARY_PATH="${LIBNDS}/lib:${LIBGBA}/lib:${LIBFAT}/lib:${PORTLIBS_ARM}/lib:${LIBRARY_PATH}"
+        export LD_LIBRARY_PATH="${LIBNDS}/lib:${LIBGBA}/lib:${LIBFAT}/lib:${PORTLIBS_ARM}/lib:${LD_LIBRARY_PATH}"
+        export PKG_CONFIG_PATH="${PORTLIBS_ARM}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+        print_success "devkitARM (GBA/NDS) environment loaded"
+    else
+        print_warning "devkitARM not found at /opt/devkitpro/devkitARM"
+    fi
+}
+
+load_3ds() {
+    if [[ -d /opt/devkitpro/ctru ]]; then
+        export CTRULIB=/opt/devkitpro/ctru
+        export CITRO3D=/opt/devkitpro/citro3d
+        export CITRO2D=/opt/devkitpro/citro2d
+        export PORTLIBS_3DS=/opt/devkitpro/portlibs/3ds
+        export C_INCLUDE_PATH="${CTRULIB}/include:${CITRO3D}/include:${CITRO2D}/include:${PORTLIBS_3DS}/include:${C_INCLUDE_PATH}"
+        export CPLUS_INCLUDE_PATH="${CTRULIB}/include:${CITRO3D}/include:${CITRO2D}/include:${PORTLIBS_3DS}/include:${CPLUS_INCLUDE_PATH}"
+        export LIBRARY_PATH="${CTRULIB}/lib:${CITRO3D}/lib:${CITRO2D}/lib:${PORTLIBS_3DS}/lib:${LIBRARY_PATH}"
+        export LD_LIBRARY_PATH="${CTRULIB}/lib:${CITRO3D}/lib:${CITRO2D}/lib:${PORTLIBS_3DS}/lib:${LD_LIBRARY_PATH}"
+        export PKG_CONFIG_PATH="${PORTLIBS_3DS}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+        print_success "3DS (ctru/citro3d/citro2d) environment loaded"
+    else
+        print_warning "3DS toolchain not found at /opt/devkitpro/ctru"
+    fi
+}
+
+load_nx() {
+    if [[ -d /opt/libnx ]]; then
+        export LIBNX=/opt/libnx
+        export SWITCH_DEV=/opt/switch-dev
+        export SWITCH_TOOLS=/opt/switch-tools
+        export DEVKITPRO=/opt/devkitpro
+        export PORTLIBS_SWITCH=/opt/devkitpro/portlibs/switch
+        export PATH="${LIBNX}/bin:${SWITCH_DEV}/bin:${SWITCH_TOOLS}/bin:${DEVKITPRO}/devkitARM/bin:${PATH}"
+        export C_INCLUDE_PATH="${LIBNX}/include:${PORTLIBS_SWITCH}/include:${C_INCLUDE_PATH}"
+        export CPLUS_INCLUDE_PATH="${LIBNX}/include:${PORTLIBS_SWITCH}/include:${CPLUS_INCLUDE_PATH}"
+        export LIBRARY_PATH="${LIBNX}/lib:${PORTLIBS_SWITCH}/lib:${LIBRARY_PATH}"
+        export LD_LIBRARY_PATH="${LIBNX}/lib:${PORTLIBS_SWITCH}/lib:${LD_LIBRARY_PATH}"
+        export PKG_CONFIG_PATH="${PORTLIBS_SWITCH}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+        print_success "Switch (libnx) environment loaded"
+    else
+        print_warning "libnx not found at /opt/libnx"
+    fi
+}
+
+load_psp() {
+    if [[ -d /opt/pspsdk ]]; then
+        export PSPSDK=/opt/pspsdk
+        export PSPDEV=/opt/pspdev
+        export PSP_TOOLCHAIN=/opt/psp-toolchain
+        export PATH="${PSPSDK}/bin:${PSPDEV}/bin:${PSP_TOOLCHAIN}/bin:${PATH}"
+        export C_INCLUDE_PATH="${PSPSDK}/include:${PSPDEV}/include:${C_INCLUDE_PATH}"
+        export CPLUS_INCLUDE_PATH="${PSPSDK}/include:${PSPDEV}/include:${CPLUS_INCLUDE_PATH}"
+        export LIBRARY_PATH="${PSPSDK}/lib:${PSPDEV}/lib:${LIBRARY_PATH}"
+        export LD_LIBRARY_PATH="${PSPSDK}/lib:${PSPDEV}/lib:${LD_LIBRARY_PATH}"
+        print_success "PSP SDK environment loaded"
+    else
+        print_warning "PSP SDK not found at /opt/pspsdk"
+    fi
+}
+
+load_vita() {
+    if [[ -d /opt/vitasdk ]]; then
+        export VITASDK=/opt/vitasdk
+        export PATH="${VITASDK}/bin:${PATH}"
+        export C_INCLUDE_PATH="${VITASDK}/include:${C_INCLUDE_PATH}"
+        export CPLUS_INCLUDE_PATH="${VITASDK}/include:${CPLUS_INCLUDE_PATH}"
+        export LIBRARY_PATH="${VITASDK}/lib:${LIBRARY_PATH}"
+        export LD_LIBRARY_PATH="${VITASDK}/lib:${LD_LIBRARY_PATH}"
+        export PKG_CONFIG_PATH="${VITASDK}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+        print_success "Vita SDK environment loaded"
+    else
+        print_warning "Vita SDK not found at /opt/vitasdk"
+    fi
+}
+
+load_n64() {
+    if [[ -d /opt/libdragon ]]; then
+        export LIBDRAGON=/opt/libdragon
+        export N64CHAIN=/opt/n64chain
+        export N64SDK=/opt/n64sdk
+        export PATH="${LIBDRAGON}/bin:${N64CHAIN}/bin:${N64SDK}/bin:${PATH}"
+        export C_INCLUDE_PATH="${LIBDRAGON}/include:${N64SDK}/include:${C_INCLUDE_PATH}"
+        export CPLUS_INCLUDE_PATH="${LIBDRAGON}/include:${N64SDK}/include:${CPLUS_INCLUDE_PATH}"
+        export LIBRARY_PATH="${LIBDRAGON}/lib:${N64SDK}/lib:${LIBRARY_PATH}"
+        export LD_LIBRARY_PATH="${LIBDRAGON}/lib:${N64SDK}/lib:${LD_LIBRARY_PATH}"
+        print_success "N64 (libdragon) environment loaded"
+    else
+        print_warning "libdragon not found at /opt/libdragon"
+    fi
+}
+
+load_dc() {
+    if [[ -d /opt/kos ]]; then
+        export KOS_BASE=/opt/kos
+        export KOS_PORTS=/opt/kos-ports
+        export KOS_UTILS=/opt/kos-utils
+        export PATH="${KOS_BASE}/utils/bin:${KOS_PORTS}/utils/bin:${PATH}"
+        export C_INCLUDE_PATH="${KOS_BASE}/include:${KOS_PORTS}/include:${C_INCLUDE_PATH}"
+        export CPLUS_INCLUDE_PATH="${KOS_BASE}/include:${KOS_PORTS}/include:${CPLUS_INCLUDE_PATH}"
+        export LIBRARY_PATH="${KOS_BASE}/lib:${KOS_PORTS}/lib:${LIBRARY_PATH}"
+        export LD_LIBRARY_PATH="${KOS_BASE}/lib:${KOS_PORTS}/lib:${LD_LIBRARY_PATH}"
+        export PKG_CONFIG_PATH="${KOS_PORTS}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+        print_success "Dreamcast (KOS) environment loaded"
+    else
+        print_warning "KOS not found at /opt/kos"
+    fi
+}
+
+load_saturn() {
+    if [[ -d /opt/saturn-dev ]]; then
+        export SATURN_DEV=/opt/saturn-dev
+        export SATURN_ORB=/opt/saturn-orb
+        export SATURN_SGL=/opt/saturn-sgl
+        export SATURN_SBL=/opt/saturn-sbl
+        export PATH="${SATURN_DEV}/bin:${SATURN_ORB}/bin:${PATH}"
+        export C_INCLUDE_PATH="${SATURN_DEV}/include:${SATURN_ORB}/include:${SATURN_SGL}/include:${SATURN_SBL}/include:${C_INCLUDE_PATH}"
+        export CPLUS_INCLUDE_PATH="${SATURN_DEV}/include:${SATURN_ORB}/include:${SATURN_SGL}/include:${SATURN_SBL}/include:${CPLUS_INCLUDE_PATH}"
+        export LIBRARY_PATH="${SATURN_DEV}/lib:${SATURN_ORB}/lib:${SATURN_SGL}/lib:${SATURN_SBL}/lib:${LIBRARY_PATH}"
+        export LD_LIBRARY_PATH="${SATURN_DEV}/lib:${SATURN_ORB}/lib:${SATURN_SGL}/lib:${SATURN_SBL}/lib:${LD_LIBRARY_PATH}"
+        print_success "Saturn environment loaded"
+    else
+        print_warning "Saturn toolchain not found at /opt/saturn-dev"
+    fi
+}
+
+load_ps1() {
+    if [[ -d /opt/psyq ]]; then
+        export PSYQ=/opt/psyq
+        export PSN00BSDK=/opt/psn00bsdk
+        export PSXSDK=/opt/psxsdk
+        export PATH="${PSYQ}/bin:${PSN00BSDK}/bin:${PSXSDK}/bin:${PATH}"
+        export C_INCLUDE_PATH="${PSYQ}/include:${PSN00BSDK}/include:${PSXSDK}/include:${C_INCLUDE_PATH}"
+        export CPLUS_INCLUDE_PATH="${PSYQ}/include:${PSN00BSDK}/include:${PSXSDK}/include:${CPLUS_INCLUDE_PATH}"
+        export LIBRARY_PATH="${PSYQ}/lib:${PSN00BSDK}/lib:${PSXSDK}/lib:${LIBRARY_PATH}"
+        export LD_LIBRARY_PATH="${PSYQ}/lib:${PSN00BSDK}/lib:${PSXSDK}/lib:${LD_LIBRARY_PATH}"
+        print_success "PS1 (PSYQ/PSn00bSDK) environment loaded"
+    else
+        print_warning "PS1 toolchain not found at /opt/psyq"
+    fi
+}
+
+load_all() {
+    load_ps2
+    load_ppc
+    load_arm
+    load_3ds
+    load_nx
+    load_psp
+    load_vita
+    load_n64
+    load_dc
+    load_saturn
+    load_ps1
+    
+    # General compiler settings
+    export CC="${CC:-clang}"
+    export CXX="${CXX:-clang++}"
+    export AR="${AR:-llvm-ar}"
+    export NM="${NM:-llvm-nm}"
+    export RANLIB="${RANLIB:-llvm-ranlib}"
+    export STRIP="${STRIP:-llvm-strip}"
+    export OBJCOPY="${OBJCOPY:-llvm-objcopy}"
+    export OBJDUMP="${OBJDUMP:-llvm-objdump}"
+    export READELF="${READELF:-llvm-readelf}"
+    export MAKEFLAGS="${MAKEFLAGS:--j$(nproc)}"
+    export CMAKE_BUILD_PARALLEL_LEVEL="${CMAKE_BUILD_PARALLEL_LEVEL:-$(nproc)}"
+    export NINJAJOBS="${NINJAJOBS:-$(nproc)}"
+    
+    print_success "All retrodev environments loaded"
+}
+
+show_help() {
+    cat << EOF
+retrodev-env - Load retroconsole development environment
+
+Usage: source retrodev-env [platform]
+
+Platforms:
+    ps2       - PlayStation 2 (PS2SDK)
+    ppc       - GameCube/Wii (devkitPPC)
+    arm       - GBA/NDS (devkitARM)
+    3ds       - Nintendo 3DS (ctru/citro3d/citro2d)
+    nx        - Nintendo Switch (libnx)
+    psp       - PlayStation Portable (PSPSDK)
+    vita      - PlayStation Vita (VitaSDK)
+    n64       - Nintendo 64 (libdragon)
+    dc        - Dreamcast (KOS)
+    saturn    - Sega Saturn
+    ps1       - PlayStation 1 (PSYQ/PSn00bSDK)
+    all       - Load all available toolchains (default)
+
+Example:
+    source retrodev-env ps2
+    source retrodev-env nx
+    source retrodev-env all
+
+Note: This script must be sourced, not executed:
+    source /usr/local/bin/retrodev-env ps2
+    # or
+    . /usr/local/bin/retrodev-env ps2
+EOF
+}
+
+# Main
+case "${PLATFORM}" in
+    ps2)
+        load_ps2
+        ;;
+    ppc|gc|wii)
+        load_ppc
+        ;;
+    arm|gba|nds)
+        load_arm
+        ;;
+    3ds)
+        load_3ds
+        ;;
+    nx|switch)
+        load_nx
+        ;;
+    psp)
+        load_psp
+        ;;
+    vita)
+        load_vita
+        ;;
+    n64)
+        load_n64
+        ;;
+    dc|dreamcast)
+        load_dc
+        ;;
+    saturn)
+        load_saturn
+        ;;
+    ps1)
+        load_ps1
+        ;;
+    all)
+        load_all
+        ;;
+    -h|--help|help)
+        show_help
+        ;;
+    *)
+        print_error "Unknown platform: ${PLATFORM}"
+        show_help
+        return 1
+        ;;
+esac

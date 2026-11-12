@@ -1,0 +1,213 @@
+# Compiled Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.bin
+*.elf
+*.nds
+*.nro
+*.3dsx
+*.cia
+*.wbfs
+*.iso
+*.gcm
+*.gcz
+*.nkit
+*.rvz
+*.nsz
+*.xci
+*.nsp
+
+# Package files
+*.pkg.tar.zst
+*.pkg.tar.xz
+*.pkg.tar.gz
+*.deb
+*.rpm
+*.apk
+
+# Build directories
+build/
+Build/
+out/
+Out/
+dist/
+Dist/
+target/
+Target/
+bin/
+Bin/
+obj/
+Obj/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+Logs/
+
+# Cache
+.cache/
+.ccache/
+*.cache
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.venv/
+.env/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Rust
+target/
+Cargo.lock
+
+# Go
+vendor/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+*.cmake
+
+# Meson
+meson-build/
+meson-logs/
+meson-private/
+
+# Ninja
+.ninja_deps
+.ninja_log
+build.ninja
+
+# Retrodev specific
+*.elf
+*.map
+*.sym
+*.bin
+*.iso
+*.dol
+*.elf
+*.nro
+*.3dsx
+*.cia
+*.vpk
+*.velf
+*.skprx
+*.suprx
+*.prx
+*.sprx
+*.self
+*.pkg
+*.app
+*.rap
+*.rif
+*.edat
+*.pgd
+*.sfo
+*.xml
+
+# Emulator saves
+*sav
+*savestate*
+*.state*
+*.srm
+*.sav
+*.fla
+*.eeprom
+*.nvram
+
+# Steam
+steamapps/
+userdata/
+*.vdf
+*.blob
+*.csd
+*.csm
+
+# Flatpak
+.flatpak-builder/

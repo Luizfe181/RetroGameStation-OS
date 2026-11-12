@@ -1,0 +1,67 @@
+[Unit]
+Description=RetroGameStation - Gamescope Steam Session
+Documentation=https://github.com/retrogamestation
+After=graphical.target
+Wants=graphical.target
+Conflicts=getty@tty1.service
+Before=getty@tty1.service
+
+[Service]
+Type=simple
+User=gamer
+Group=gamer
+Environment=XDG_SESSION_TYPE=wayland
+Environment=XDG_CURRENT_DESKTOP=KDE
+Environment=QT_QPA_PLATFORM=wayland
+Environment=SDL_VIDEODRIVER=wayland
+Environment=CLUTTER_BACKEND=wayland
+Environment=ECORE_EVAS_ENGINE=wayland_egl
+Environment=ELM_DISPLAY=wl
+Environment=MOZ_ENABLE_WAYLAND=1
+Environment=STEAM_DECK=1
+Environment=STEAMOS=1
+Environment=STEAMOS_SESSION=gamescope
+Environment=GAMESCOPE_RESOLUTION=1920x1080
+Environment=GAMESCOPE_REFRESH=60
+Environment=GAMESCOPE_HDR=0
+Environment=GAMESCOPE_DRM_FORMAT=XR24
+Environment=GAMESCOPE_FILTER=fsr
+Environment=GAMESCOPE_SHARPNESS=0.5
+Environment=MANGOHUD=1
+Environment=MANGOHUD_CONFIG=font_size=24,position=top-left,gpu_temp,vram,gpu_util,cpu_temp,cpu_util,ram,fps,frametime
+Environment=VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/radeon_icd.x86_64.json:/usr/share/vulkan/icd.d/intel_icd.x86_64.json
+Environment=VK_LAYER_PATH=/usr/share/vulkan/explicit_layer.d:/usr/share/vulkan/implicit_layer.d
+Environment=DXVK_ASYNC=1
+Environment=VKD3D_CONFIG=dxr11,multi_queue
+Environment=PROTON_NO_ESYNC=0
+Environment=PROTON_NO_FSYNC=0
+ExecStartPre=/usr/bin/sleep 2
+ExecStart=/usr/bin/gamescope \
+    -W 1920 \
+    -H 1080 \
+    -r 60 \
+    -f \
+    -F fsr \
+    -S 0.5 \
+    -- \
+    /usr/bin/steam -tenfoot -steamos3 -steamdeck
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Resource limits for gaming
+LimitNOFILE=1048576
+LimitNPROC=1048576
+LimitMEMLOCK=infinity
+
+# CPU scheduling for gaming performance
+CPUSchedulingPolicy=fifo
+CPUSchedulingPriority=50
+
+# I/O priority
+IOPriority=best-effort
+IOPriorityClass=2
+
+[Install]
+WantedBy=graphical.target

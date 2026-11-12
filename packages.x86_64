@@ -1,0 +1,776 @@
+#
+# packages.x86_64 - Package list for RetroGameStation
+# Hybrid Gaming (SteamOS/Gamescope) + Retroconsole Development
+#
+
+# =============================================================================
+# BASE SYSTEM
+# =============================================================================
+base
+base-devel
+linux
+linux-firmware
+linux-headers
+sudo
+systemd
+systemd-sysvcompat
+
+# =============================================================================
+# BOOTLOADER & INSTALLER
+# =============================================================================
+grub
+efibootmgr
+os-prober
+intel-ucode
+amd-ucode
+syslinux
+gptfdisk
+parted
+dosfstools
+btrfs-progs
+f2fs-tools
+exfatprogs
+ntfs-3g
+
+# =============================================================================
+# NETWORK & CONNECTIVITY
+# =============================================================================
+networkmanager
+network-manager-applet
+nm-connection-editor
+bluez
+bluez-utils
+bluez-plugins
+bluez-hid2hci
+bluez-cups
+bluez-obex
+wireless_tools
+wpa_supplicant
+dialog
+dhclient
+openresolv
+nss-mdns
+avahi
+libnss-mdns
+
+# =============================================================================
+# GRAPHICS DRIVERS & MESA
+# =============================================================================
+# AMD/ATI
+mesa
+mesa-demos
+vulkan-radeon
+lib32-mesa
+lib32-vulkan-radeon
+xf86-video-amdgpu
+vulkan-icd-loader
+lib32-vulkan-icd-loader
+
+# NVIDIA (proprietary - uncomment if needed)
+# nvidia-dkms
+# nvidia-utils
+# lib32-nvidia-utils
+# nvidia-settings
+# opencl-nvidia
+# lib32-opencl-nvidia
+
+# Intel
+vulkan-intel
+lib32-vulkan-intel
+xf86-video-intel
+intel-media-driver
+intel-gmmlib
+lib32-intel-media-driver
+
+# Generic
+vulkan-tools
+vulkan-validation-layers
+lib32-vulkan-validation-layers
+vulkan-headers
+glslang
+shaderc
+spirv-tools
+lib32-spirv-tools
+
+# =============================================================================
+# GAMESCOPE & STEAMOS COMPONENTS
+# =============================================================================
+gamescope
+gamescope-session-steam
+gamescope-session-steam-git
+steam
+steam-native-runtime
+steam-devices
+steam-controller
+
+# SteamOS-style session
+plasma-workspace
+plasma-desktop
+plasma-systemmonitor
+plasma-pa
+plasma-nm
+plasma-browser-integration
+kde-gtk-config
+kwin
+kwayland
+kwayland-integration
+kwayland-server
+kactivitymanagerd
+kdeclarative
+kglobalaccel
+knotifications
+kservice
+ktextwidgets
+kwidgetsaddons
+kwindowsystem
+kxmlgui
+plasma-integration
+polkit-kde-agent
+systemsettings
+kde-cli-tools
+kdeplasma-addons
+kgamma
+khelpcenter
+kinfocenter
+kmenuedit
+kscreen
+ksshaskpass
+ksystemstats
+kwallet-pam
+kwayland-integration
+kwin
+kwrited
+libkscreen
+libksysguard
+milou
+oxygen
+plasma-browser-integration
+plasma-desktop
+plasma-disks
+plasma-firewall
+plasma-integration
+plasma-nm
+plasma-pa
+plasma-systemmonitor
+plasma-thunderbolt
+plasma-vault
+plasma-welcome
+plasma-workspace
+plasma-workspace-wallpapers
+polkit-kde-agent
+powerdevil
+print-manager
+sddm
+sddm-kcm
+systemsettings
+user-manager
+xdg-desktop-portal-kde
+
+# =============================================================================
+# AUDIO (PipeWire for SteamOS compatibility)
+# =============================================================================
+pipewire
+pipewire-pulse
+pipewire-alsa
+pipewire-jack
+pipewire-roc
+libpipewire
+lib32-pipewire
+lib32-pipewire-pulse
+lib32-pipewire-alsa
+lib32-pipewire-jack
+wireplumber
+libwireplumber
+gst-plugin-pipewire
+lib32-gst-plugin-pipewire
+realtime-privileges
+sof-firmware
+alsa-firmware
+alsa-ucm-conf
+alsa-utils
+pavucontrol
+pavucontrol-qt
+helvum
+qjackctl
+cadence
+
+# =============================================================================
+# GAMING TOOLS & UTILITIES
+# =============================================================================
+lutris
+heroic-games-launcher
+bottles
+protonup-qt
+proton-ge-custom
+gamemode
+lib32-gamemode
+mangohud
+lib32-mangohud
+goverlay
+gamescope
+vkbasalt
+lib32-vkbasalt
+reshade
+dxvk
+vkd3d
+lib32-vkd3d
+wine
+wine-gecko
+wine-mono
+winetricks
+winetricks-git
+bottles
+flatpak
+flatpak-builder
+steam-native-runtime
+steam-devices
+steam-controller
+controller-support
+controller-support-udev
+inputplumber
+evtest
+libevdev
+libinput
+libinput-gestures
+libinput-tools
+
+# =============================================================================
+# DEVELOPMENT TOOLS - GENERAL
+# =============================================================================
+git
+git-lfs
+github-cli
+subversion
+mercurial
+cmake
+ninja
+meson
+autoconf
+automake
+libtool
+pkgconf
+make
+gcc
+gcc-libs
+clang
+llvm
+lld
+lldb
+compiler-rt
+rust
+cargo
+rustup
+python
+python-pip
+python-virtualenv
+python-poetry
+python-pipx
+nodejs
+npm
+yarn
+pnpm
+go
+jdk-openjdk
+jre-openjdk
+maven
+gradle
+dotnet-sdk
+dotnet-runtime
+perl
+ruby
+lua
+luarocks
+
+# =============================================================================
+# RETROCONSOLE DEVELOPMENT TOOLCHAINS
+# =============================================================================
+
+# PS2 Development (PS2SDK)
+# Note: These are typically built from source/AUR - see local repo script
+# ps2sdk-git
+# ps2dev-git
+# ps2toolchain-git
+
+# GameCube/Wii Development (devkitPPC)
+# devkitppc-git
+# libogc-git
+# libfat-ogc-git
+# libpng-ogc-git
+# zlib-ogc-git
+# freetype-ogc-git
+
+# GBA/NDS Development (devkitARM)
+# devkitarm-git
+# libnds-git
+# libgba-git
+# libfat-git
+# dswifi-git
+# maxmod-git
+
+# 3DS Development
+# devkitarm-git (shared)
+# ctru-git
+# citro3d-git
+# citro2d-git
+
+# Dreamcast Development (KOS)
+# kos-git
+# kos-ports-git
+
+# Saturn Development
+# saturn-dev-git
+
+# PS1 Development (PSYQ/PSn00bSDK)
+# psn00bsdk-git
+# psyq-git
+
+# N64 Development (libdragon)
+# libdragon-git
+
+# PSP Development (PSPSDK)
+# pspsdk-git
+# pspdev-git
+
+# Vita Development (VitaSDK)
+# vitasdk-git
+
+# Switch Development (libnx)
+# devkitarm-git (shared)
+# libnx-git
+
+# =============================================================================
+# REVERSE ENGINEERING & DECOMPILATION
+# =============================================================================
+ghidra
+ghidra-scripts
+radare2
+radare2-cutter
+ida-free
+ida-pro
+binaryninja
+binaryninja-demo
+angr
+angr-management
+pwntools
+ropper
+ropgadget
+checksec
+gdb
+gdb-dashboard
+gef
+pwndbg
+voltron
+frida
+frida-tools
+objection
+capstone
+keystone
+unicorn
+z3
+claripy
+cle
+pyvex
+archinfo
+angr-native
+binwalk
+firmware-mod-kit
+squashfs-tools
+ubi-reader
+mtd-utils
+nanddump
+flashrom
+
+# =============================================================================
+# EMULATORS (for testing)
+# =============================================================================
+pcsx2
+pcsx2-qt
+duckstation
+ryujinx
+yuzu
+yuzu-mainline
+yuzu-early-access
+citrus
+citra
+citra-qt
+citra-git
+ppsspp
+ppsspp-qt
+rpcs3
+dolphin-emu
+dolphin-emu-git
+mupen64plus
+mupen64plus-qt
+parallel-n64
+ares
+beetle-psx
+beetle-psx-hw
+mednafen
+mednaffe
+retroarch
+retroarch-assets
+retroarch-autoconfig
+libretro-beetle-psx
+libretro-beetle-psx-hw
+libretro-pcsx2
+libretro-dolphin
+libretro-mupen64plus
+libretro-parallel-n64
+libretro-ppsspp
+libretro-rpcs3
+libretro-snes9x
+libretro-mgba
+libretro-gambatte
+libretro-genesis-plus-gx
+libretro-fceumm
+libretro-nestopia
+libretro-vba-next
+libretro-desmume
+libretro-melonDS
+libretro-citra
+libretro-flycast
+libretro-redream
+libretro-kronos
+libretro-yabause
+libretro-beetle-saturn
+libretro-beetle-lynx
+libretro-beetle-ngp
+libretro-beetle-pce-fast
+libretro-beetle-sgx
+libretro-beetle-wswan
+libretro-virtualjaguar
+libretro-opera
+libretro-vecx
+libretro-mame
+libretro-mame2003
+libretro-mame2010
+fbneo
+fbneo-git
+
+# =============================================================================
+# BUILD TOOLS FOR RETRODEV
+# =============================================================================
+python-pyelftools
+python-capstone
+python-keystone
+python-unicorn
+python-z3-solver
+python-angr
+python-claripy
+python-cle
+python-pyvex
+python-archinfo
+python-pwntools
+python-ropper
+python-ropgadget
+python-checksec
+python-frida
+python-frida-tools
+python-objection
+python-binwalk
+python-firmware-mod-kit
+
+# Cross-compilation toolchains
+gcc-arm-none-eabi
+gcc-mips-elf
+gcc-powerpc-elf
+gcc-sh-elf
+gcc-riscv64-elf
+binutils-arm-none-eabi
+binutils-mips-elf
+binutils-powerpc-elf
+binutils-sh-elf
+binutils-riscv64-elf
+newlib-arm-none-eabi
+newlib-mips-elf
+newlib-powerpc-elf
+newlib-sh-elf
+newlib-riscv64-elf
+
+# =============================================================================
+# UTILITIES & TOOLS
+# =============================================================================
+htop
+btop
+btm
+bpytop
+ncdu
+duf
+dust
+lsd
+exa
+bat
+fd
+ripgrep
+rg
+fzf
+zoxide
+starship
+zsh
+zsh-completions
+zsh-syntax-highlighting
+zsh-autosuggestions
+fish
+tmux
+screen
+neovim
+vim
+nano
+micro
+helix
+code
+vscode
+cursor
+jetbrains-toolbox
+docker
+docker-compose
+docker-buildx
+podman
+podman-compose
+buildah
+skopeo
+crictl
+cri-tools
+kubernetes-tools
+kubectl
+helm
+minikube
+kind
+k3d
+terraform
+packer
+vagrant
+ansible
+vagrant-libvirt
+libvirt
+virt-manager
+qemu
+qemu-base
+qemu-desktop
+qemu-emulators-full
+qemu-img
+qemu-system-x86
+qemu-system-arm
+qemu-system-mips
+qemu-system-ppc
+qemu-system-riscv
+qemu-system-sparc
+qemu-user
+qemu-user-static
+virtiofsd
+spice-gtk
+spice-vdagent
+usbredir
+virglrenderer
+libvirt-glib
+libvirt-python
+python-libvirt
+
+# =============================================================================
+# FONTS & THEMES
+# =============================================================================
+noto-fonts
+noto-fonts-cjk
+noto-fonts-emoji
+noto-fonts-extra
+ttf-dejavu
+ttf-liberation
+ttf-ubuntu-font-family
+ttf-roboto
+ttf-roboto-mono
+ttf-fira-code
+ttf-fira-sans
+ttf-jetbrains-mono
+ttf-cascadia-code
+ttf-victor-mono
+ttf-inconsolata
+ttf-hack
+adobe-source-code-pro-fonts
+adobe-source-sans-pro-fonts
+adobe-source-serif-pro-fonts
+cantarell-fonts
+inter-font
+nerd-fonts-complete
+nerd-fonts-jetbrains-mono
+nerd-fonts-fira-code
+nerd-fonts-cascadia-code
+nerd-fonts-victor-mono
+nerd-fonts-hack
+nerd-fonts-inconsolata
+nerd-fonts-ubuntu-mono
+nerd-fonts-dejavu-sans-mono
+nerd-fonts-roboto-mono
+ttf-ms-fonts
+ttf-ms-win10
+ttf-ms-win11
+
+# =============================================================================
+# GRAPHICAL APPLICATIONS
+# =============================================================================
+firefox
+firefox-i18n-pt-br
+chromium
+brave-browser
+thunderbird
+libreoffice-fresh
+libreoffice-fresh-pt-br
+gimp
+inkscape
+krita
+blender
+obs-studio
+obs-studio-browser
+obs-studio-freeworld
+kdenlive
+shotcut
+handbrake
+handbrake-cli
+ffmpeg
+ffmpeg-full
+ffmpegthumbs
+mpv
+vlc
+celluloid
+haruna
+gnome-mpv
+dolphin
+konsole
+kate
+kwrite
+kcalc
+kfind
+kate
+kwrite
+okular
+gwenview
+spectacle
+flameshot
+kcolorchooser
+kcharselect
+kwalletmanager
+kgpg
+kleopatra
+kdeconnect
+kdeconnect-kde
+kdeconnect-sms
+kdeconnect-bluetooth
+kdeconnect-nfc
+kdeconnect-ssh
+kdeconnect-clipboard
+kdeconnect-browser
+kdeconnect-firefox
+kdeconnect-chrome
+kdeconnect-edge
+kdeconnect-opera
+kdeconnect-vivaldi
+kdeconnect-brave
+
+# =============================================================================
+# FILE SYSTEMS & STORAGE
+# =============================================================================
+btrfs-progs
+f2fs-tools
+exfatprogs
+ntfs-3g
+dosfstools
+e2fsprogs
+xfsprogs
+jfsutils
+reiserfsprogs
+nilfs-utils
+lvm2
+cryptsetup
+veracrypt
+zfs-dkms
+zfs-utils
+snapper
+timeshift
+timeshift-autosnap
+grub-btrfs
+btrfs-assistant
+btrfsmaintenance
+
+# =============================================================================
+# SECURITY & PRIVACY
+# =============================================================================
+apparmor
+apparmor-profiles
+audit
+audit-libs
+libcap
+libcap-ng
+libseccomp
+seccomp
+landlock
+tpm2-tools
+tpm2-tss
+tpm2-abrmd
+fwupd
+fwupd-efi
+libfido2
+libfido2-udev
+ykman
+ykman-gui
+yubikey-manager
+yubikey-manager-qt
+yubikey-personalization
+yubikey-personalization-gui
+pam-u2f
+pam-fido2
+libu2f-host
+libu2f-server
+opensc
+opensc-pkcs11
+ccid
+pcsc-tools
+pcsc-lite
+pcsc-perl
+
+# =============================================================================
+# LOCALIZATION (Portuguese Brazil)
+# =============================================================================
+man-pages-pt_br
+man-pages-pt
+aspell-pt
+aspell-pt_br
+hunspell-pt
+hunspell-pt_br
+mythes-pt
+mythes-pt_br
+hyphen-pt
+hyphen-pt_br
+libreoffice-fresh-pt-br
+firefox-i18n-pt-br
+thunderbird-i18n-pt-br
+
+# =============================================================================
+# PACKAGES FROM LOCAL REPO (AUR/Retrodev) - Built via setup-local-repo.sh
+# =============================================================================
+# These will be added to the local repo and installed during build
+# Uncomment after building local repo:
+# ps2sdk
+# ps2dev
+# ps2toolchain
+# devkitppc
+# libogc
+# libfat-ogc
+# devkitarm
+# libnds
+# libgba
+# libfat
+# dswifi
+# maxmod
+# ctru
+# citro3d
+# citro2d
+# kos
+# kos-ports
+# saturn-dev
+# psn00bsdk
+# psyq
+# libdragon
+# pspsdk
+# pspdev
+# vitasdk
+# libnx
+# switch-dev

@@ -1,0 +1,87 @@
+[Unit]
+Description=RetroGameStation - Steam First Boot Setup
+Documentation=https://github.com/retrogamestation
+After=network-online.target
+Wants=network-online.target
+Before=gamescope-session.service
+ConditionPathExists=!/home/gamer/.steam/steam/steamapps/libraryfolders.vdf
+
+[Service]
+Type=oneshot
+User=gamer
+Group=gamer
+Environment=HOME=/home/gamer
+Environment=STEAM_DECK=1
+Environment=STEAMOS=1
+Environment=STEAMOS_SESSION=gamescope
+ExecStartPre=/usr/bin/mkdir -p /home/gamer/.steam/steam/steamapps
+ExecStartPre=/usr/bin/mkdir -p /home/gamer/.local/share/Steam/steamapps
+ExecStartPre=/usr/bin/ln -sfn /home/gamer/.steam/steam /home/gamer/.local/share/Steam
+# Create library folders configuration
+ExecStart=/usr/bin/bash -c 'cat > /home/gamer/.steam/steam/steamapps/libraryfolders.vdf << '"'"'EOF'"'"'
+"libraryfolders"
+{
+    "0"
+    {
+        "path"    "/home/gamer/.steam/steam"
+        "label"   "Default"
+        "contentid"   "0"
+        "totalsize"   "0"
+        "update_clean_bytes_tally"  "0"
+        "time_last_update_corruption_check" "0"
+        "apps"
+        {
+        }
+    }
+    "1"
+    {
+        "path"    "/home/gamer/Games"
+        "label"   "Games"
+        "contentid"   "0"
+        "totalsize"   "0"
+        "update_clean_bytes_tally"  "0"
+        "time_last_update_corruption_check" "0"
+        "apps"
+        {
+        }
+    }
+}
+EOF'"'"''
+# Create steam configuration
+ExecStartPost=/usr/bin/bash -c 'mkdir -p /home/gamer/.steam/steam/config && cat > /home/gamer/.steam/steam/config/loginusers.vdf << '"'"'EOF'"'"'
+"users"
+{
+    "76561198000000000"
+    {
+        "AccountName"     "gamer"
+        "PersonaName"     "RetroGamer"
+        "RememberPassword"    "1"
+        "mostrecent"      "1"
+        "Timestamp"       "0"
+        "WantsOfflineMode"    "0"
+        "SkipOfflineModeWarning"  "0"
+        "AllowAutoLogin"      "1"
+        "ServiceLevel"        "3"
+    }
+}
+EOF'"'"''
+# Set up gamescope session as default
+ExecStartPost=/usr/bin/bash -c 'mkdir -p /home/gamer/.config && cat > /home/gamer/.config/autostart-gamescope.desktop << '"'"'EOF'"'"'
+[Desktop Entry]
+Type=Application
+Name=Gamescope Steam Session
+Exec=/usr/bin/gamescope -W 1920 -H 1080 -r 60 -f -F fsr -S 0.5 -- /usr/bin/steam -tenfoot -steamos3 -steamdeck
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+EOF'"'"''
+# Create Games directory
+ExecStartPost=/usr/bin/mkdir -p /home/gamer/Games
+ExecStartPost=/usr/bin/chown -R gamer:gamer /home/gamer/Games
+# Set up flatpak for additional apps
+ExecStartPost=/usr/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --user || true
+# Mark first boot as complete
+ExecStartPost=/usr/bin/touch /home/gamer/.steam_firstboot_complete
+
+[Install]
+WantedBy=multi-user.target

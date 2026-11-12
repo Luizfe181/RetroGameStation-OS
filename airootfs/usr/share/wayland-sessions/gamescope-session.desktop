@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Gamescope Steam Session
+Comment=SteamOS-style gaming session with Gamescope
+Exec=/usr/bin/gamescope -W 1920 -H 1080 -r 60 -f -F fsr -S 0.5 -- /usr/bin/steam -tenfoot -steamos3 -steamdeck
+Type=Application
+DesktopNames=KDE
+Keywords=gaming;steam;gamescope;steamos;
+StartupNotify=true
+Terminal=false
+Categories=Game;

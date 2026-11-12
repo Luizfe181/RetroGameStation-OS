@@ -1,0 +1,12 @@
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = *
+Target = !retrogamestation-local/*
+
+[Action]
+Description = Updating retrogamestation-local repository database...
+When = PostTransaction
+Exec = /usr/bin/bash -c 'if [[ -d /var/cache/pacman/retrogamestation-local/packages ]]; then cd /var/cache/pacman/retrogamestation-local/packages && repo-add retrogamestation-local.db.tar.zst *.pkg.tar.zst 2>/dev/null; fi'

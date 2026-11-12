@@ -1,0 +1,196 @@
+#!/usr/bin/env bash
+#
+# retrogame-setup - Post-install setup script for RetroGameStation
+# Run this after installation to complete setup
+#
+
+set -euo pipefail
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+print_info() { echo -e "${BLUE}[INFO]${NC} $*"; }
+print_success() { echo -e "${GREEN}[SUCCESS]${NC} $*"; }
+print_warning() { echo -e "${YELLOW}[WARNING]${NC} $*"; }
+print_error() { echo -e "${RED}[ERROR]${NC} $*"; }
+
+# Check if running as root
+if [[ $EUID -ne 0 ]]; then
+    print_error "This script must be run as root"
+    exit 1
+fi
+
+print_step "RetroGameStation Post-Install Setup"
+echo ""
+
+# Enable services
+print_step "Enabling systemd services..."
+systemctl enable NetworkManager.service
+systemctl enable bluetooth.service
+systemctl enable sddm.service
+systemctl enable gamescope-session.service
+systemctl enable steam-firstboot.service
+systemctl enable retrodev-env-setup.service
+systemctl enable fstrim.timer
+systemctl enable paccache.timer
+systemctl enable systemd-timesyncd.service
+print_success "Services enabled"
+
+# Set up user
+print_step "Setting up gamer user..."
+if ! id "gamer" &>/dev/null; then
+    useradd -m -g users -G wheel,video,audio,optical,storage,power,network,input,uucp,lp,games -s /bin/bash gamer
+    print_success "User 'gamer' created"
+else
+    print_info "User 'gamer' already exists"
+fi
+
+# Set password for gamer user (prompt)
+print_warning "Set password for gamer user:"
+passwd gamer
+
+# Set up sudo
+print_step "Configuring sudo..."
+cat > /etc/sudoers.d/gamer << 'EOF'
+gamer ALL=(ALL) NOPASSWD: ALL
+EOF
+chmod 440 /etc/sudoers.d/gamer
+print_success "Sudo configured"
+
+# Set up local repository
+print_step "Setting up local pacman repository..."
+if [[ -d /var/cache/pacman/retrogamestation-local ]]; then
+    cat > /etc/pacman.d/retrogamestation-local.conf << 'EOF'
+[retrogamestation-local]
+SigLevel = Optional TrustAll
+Server = file:///var/cache/pacman/retrogamestation-local
+EOF
+    print_success "Local repository configured"
+else
+    print_warning "Local repository not found at /var/cache/pacman/retrogamestation-local"
+    print_info "Run setup-local-repo.sh to build it"
+fi
+
+# Update pacman.conf to include local repo
+if ! grep -q "retrogamestation-local" /etc/pacman.conf; then
+    print_step "Adding local repository to pacman.conf..."
+    cat >> /etc/pacman.conf << 'EOF'
+
+[retrogamestation-local]
+SigLevel = Optional TrustAll
+Server = file:///var/cache/pacman/retrogamestation-local
+EOF
+    print_success "Local repository added to pacman.conf"
+fi
+
+# Initialize pacman keyring
+print_step "Initializing pacman keyring..."
+pacman-key --init
+pacman-key --populate archlinux
+print_success "Pacman keyring initialized"
+
+# Update system
+print_step "Updating system..."
+pacman -Syu --noconfirm
+print_success "System updated"
+
+# Install additional packages from local repo
+print_step "Installing retrodev toolchains from local repo..."
+pacman -S --noconfirm --needed \
+    ps2sdk ps2dev ps2toolchain \
+    devkitppc libogc libfat-ogc \
+    devkitarm libnds libgba libfat dswifi maxmod \
+    ctru citro3d citro2d \
+    kos kos-ports \
+    libdragon \
+    pspsdk pspdev \
+    vitasdk \
+    libnx \
+    2>/dev/null || print_warning "Some retrodev packages not available in local repo yet"
+
+# Set up Flatpak
+print_step "Setting up Flatpak..."
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --system
+print_success "Flatpak configured"
+
+# Set up Steam directories
+print_step "Setting up Steam directories..."
+mkdir -p /home/gamer/.steam/steam/steamapps
+mkdir -p /home/gamer/Games
+chown -R gamer:gamer /home/gamer/.steam
+chown -R gamer:gamer /home/gamer/Games
+print_success "Steam directories created"
+
+# Configure gamescope session
+print_step "Configuring Gamescope session..."
+mkdir -p /home/gamer/.config/autostart
+cat > /home/gamer/.config/autostart/gamescope-session.desktop << 'EOF'
+[Desktop Entry]
+Type=Application
+Name=Gamescope Steam Session
+Exec=/usr/bin/gamescope -W 1920 -H 1080 -r 60 -f -F fsr -S 0.5 -- /usr/bin/steam -tenfoot -steamos3 -steamdeck
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+EOF
+chown -R gamer:gamer /home/gamer/.config
+print_success "Gamescope session configured"
+
+# Set up retrodev environment for user
+print_step "Setting up retrodev environment..."
+cat > /home/gamer/.config/environment.d/retrodev.conf << 'EOF'
+PS2SDK=/opt/ps2sdk
+PS2DEV=/opt/ps2dev
+PS2TOOLCHAIN=/opt/ps2toolchain
+DEVKITPRO=/opt/devkitpro
+DEVKITPPC=/opt/devkitpro/devkitPPC
+DEVKITARM=/opt/devkitpro/devkitARM
+LIBNX=/opt/libnx
+KOS_BASE=/opt/kos
+LIBDRAGON=/opt/libdragon
+VITASDK=/opt/vitasdk
+PSPSDK=/opt/pspsdk
+PATH=${PATH}:/opt/ps2sdk/bin:/opt/ps2dev/bin:/opt/ps2toolchain/bin:/opt/devkitpro/devkitPPC/bin:/opt/devkitpro/devkitARM/bin:/opt/libnx/bin:/opt/kos/utils/bin
+EOF
+chown gamer:gamer /home/gamer/.config/environment.d/retrodev.conf
+print_success "Retrodev environment configured"
+
+# Generate locale
+print_step "Generating locale..."
+sed -i 's/#pt_BR.UTF-8 UTF-8/pt_BR.UTF-8 UTF-8/' /etc/locale.gen
+locale-gen
+print_success "Locale generated"
+
+# Set timezone
+print_step "Setting timezone to America/Sao_Paulo..."
+ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+hwclock --systohc
+print_success "Timezone set"
+
+# Configure mkinitcpio for gaming
+print_step "Configuring mkinitcpio..."
+sed -i 's/^HOOKS=.*/HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)/' /etc/mkinitcpio.conf
+sed -i 's/^MODULES=.*/MODULES=(amdgpu radeon i915 nouveau nvidia)/' /etc/mkinitcpio.conf
+mkinitcpio -P
+print_success "mkinitcpio configured"
+
+# Configure bootloader (GRUB)
+print_step "Configuring GRUB..."
+grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=RetroGameStation --recheck
+grub-mkconfig -o /boot/grub/grub.cfg
+print_success "GRUB configured"
+
+# Final message
+echo ""
+print_success "RetroGameStation setup completed!"
+echo ""
+print_info "Next steps:"
+print_info "1. Reboot the system"
+print_info "2. Login as 'gamer' user (auto-login configured)"
+print_info "3. Steam will launch in Gamescope session automatically"
+print_info "4. Retrodev toolchains are available in /opt/"
+print_info "5. Run 'sysinfo' in terminal to check toolchain status"
+echo ""
