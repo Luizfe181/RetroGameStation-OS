@@ -66,13 +66,19 @@ xf86-video-amdgpu
 vulkan-icd-loader
 lib32-vulkan-icd-loader
 
-# NVIDIA (proprietary - uncomment if needed)
+# NVIDIA (proprietary - enable for NVIDIA GPUs)
+# Uncomment the line below to enable NVIDIA proprietary drivers
 # nvidia-dkms
 # nvidia-utils
 # lib32-nvidia-utils
 # nvidia-settings
 # opencl-nvidia
 # lib32-opencl-nvidia
+
+# NVIDIA Prime/Optimus support (for laptops)
+# nvidia-prime
+# bbswitch
+# optimus-manager
 
 # Intel
 vulkan-intel
@@ -91,6 +97,29 @@ glslang
 shaderc
 spirv-tools
 lib32-spirv-tools
+
+# Hardware enablement / Firmware
+linux-firmware
+linux-firmware-qlogic
+linux-firmware-whence
+amd-ucode
+intel-ucode
+sof-firmware
+alsa-firmware
+fwupd
+fwupd-efi
+libfido2
+libfido2-udev
+tpm2-tools
+tpm2-tss
+
+# Laptop/Hardware specific
+thermald
+power-profiles-daemon
+tlp
+tlp-rdw
+acpi_call
+acpi_call-dkms
 
 # =============================================================================
 # GAMESCOPE & STEAMOS COMPONENTS
@@ -193,6 +222,34 @@ pavucontrol-qt
 helvum
 qjackctl
 cadence
+
+# =============================================================================
+# INPUT DEVICES / GAMING HARDWARE
+# =============================================================================
+libinput
+libinput-gestures
+libinput-tools
+evtest
+inputplumber
+controller-support
+controller-support-udev
+steam-devices
+steam-controller
+hidapi
+libevdev
+mtdev
+xorg-xinput
+xorg-xset
+xorg-xrandr
+xorg-xsetroot
+# Gaming peripherals
+pius
+antimicrox
+gaming-input-udev
+# RGB/LED control
+openrgb
+ckb-next
+razergenie
 
 # =============================================================================
 # GAMING TOOLS & UTILITIES
