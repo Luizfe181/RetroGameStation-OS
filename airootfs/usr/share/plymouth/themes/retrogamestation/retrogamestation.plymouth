@@ -1,0 +1,17 @@
+[Plymouth Theme]
+Name=RetroGameStation
+Description=RetroGameStation OS Boot Splash - Hybrid Gaming & Retrodev
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/retrogamestation
+ScriptFile=/usr/share/plymouth/themes/retrogamestation/retrogamestation.script
+
+# Video settings
+VideoFile=/usr/share/plymouth/themes/retrogamestation/boot-video.mp4
+VideoLoop=false
+VideoBackgroundColor=0x000000
+
+# Fallback if no video
+BackgroundStartColor=0x000000
+BackgroundEndColor=0x001122

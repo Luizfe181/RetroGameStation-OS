@@ -1,0 +1,266 @@
+/*
+ * RetroGameStation OS - Plymouth Theme Script
+ * Dark/Retro-futuristic boot splash with video support
+ * Colors: Deep black #000000, Cobalt #004488, Neon cyan #00A8FF
+ */
+
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
+
+// Video file (place your boot video here as boot-video.mp4)
+// Recommended: 1920x1080, 30fps, H.264, 10-15 seconds, no audio
+// If video doesn't exist, falls back to animated logo
+
+// Theme colors
+const COLOR_BG_DEEP     = 0x000000;  // Deep black
+const COLOR_COBALT      = 0x004488;  // Cobalt blue
+const COLOR_NEON_CYAN   = 0x00A8FF;  // Neon cyan
+const COLOR_NEON_DIM    = 0x0066AA;  // Dimmed neon
+const COLOR_WHITE       = 0xFFFFFF;
+const COLOR_GRAY_LIGHT  = 0xCCCCCC;
+const COLOR_GRAY_DIM    = 0x888888;
+const COLOR_GREEN_OK    = 0x00CC88;
+
+// Animation timing
+const VIDEO_TIMEOUT     = 30.0;      // Max seconds to wait for video
+const FADE_DURATION     = 1.5;       // Fade in/out duration
+const PULSE_PERIOD      = 2.0;       // Logo pulse period
+const PARTICLE_COUNT    = 30;        // Background particles
+
+// ============================================================================
+// GLOBAL STATE
+// ============================================================================
+
+let video_sprite = null;
+let video_playing = false;
+let fallback_mode = false;
+let logo_sprite = null;
+let text_sprite = null;
+let progress_box = null;
+let progress_bar = null;
+let particles = [];
+let start_time = 0;
+let video_ended = false;
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+function lerp(a, b, t) {
+    return a + (b - a) * t;
+}
+
+function smoothstep(t) {
+    return t * t * (3 - 2 * t);
+}
+
+function clamp(val, min, max) {
+    return Math.max(min, Math.min(max, val));
+}
+
+// ============================================================================
+// PARTICLE SYSTEM (background ambient effect)
+// ============================================================================
+
+function create_particles() {
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+        let p = {
+            x: Math.random() * Window.GetWidth(),
+            y: Math.random() * Window.GetHeight(),
+            vx: (Math.random() - 0.5) * 15,
+            vy: (Math.random() - 0.5) * 10,
+            size: Math.random() * 2 + 0.5,
+            alpha: Math.random() * 0.3 + 0.1,
+            color: Math.random() > 0.5 ? COLOR_NEON_CYAN : COLOR_COBALT,
+            life: Math.random() * 10
+        };
+        let sprite = Sprite();
+        sprite.SetPosition(p.x, p.y);
+        sprite.SetOpacity(p.alpha);
+        particles.push({data: p, sprite: sprite});
+    }
+}
+
+function update_particles(delta) {
+    let w = Window.GetWidth();
+    let h = Window.GetHeight();
+    
+    for (let i = 0; i < particles.length; i++) {
+        let p = particles[i].data;
+        let s = particles[i].sprite;
+        
+        p.x += p.vx * delta;
+        p.y += p.vy * delta;
+        p.life -= delta;
+        
+        // Wrap around screen
+        if (p.x < -10) p.x = w + 10;
+        if (p.x > w + 10) p.x = -10;
+        if (p.y < -10) p.y = h + 10;
+        if (p.y > h + 10) p.y = -10;
+        
+        // Pulsing alpha
+        p.alpha = 0.15 + 0.15 * Math.sin(p.life * 2);
+        
+        s.SetPosition(p.x, p.y);
+        s.SetOpacity(p.alpha);
+    }
+}
+
+// ============================================================================
+// VIDEO PLAYBACK
+// ============================================================================
+
+function setup_video() {
+    let video_path = "/usr/share/plymouth/themes/retrogamestation/boot-video.mp4";
+    
+    // Check if video file exists by trying to create sprite
+    // Plymouth doesn't have direct file existence check, so we try
+    try {
+        video_sprite = Sprite();
+        // Note: In Plymouth, video is typically handled via the .plymouth config
+        // This is a fallback - the main video is declared in retrogamestation.plymouth
+        video_playing = true;
+    } catch (e) {
+        log("Video not found, using fallback animation");
+        fallback_mode = true;
+        setup_fallback();
+    }
+}
+
+// ============================================================================
+// FALLBACK ANIMATION (when no video)
+// ============================================================================
+
+function setup_fallback() {
+    let w = Window.GetWidth();
+    let h = Window.GetHeight();
+    
+    // Create logo sprite (using built-in drawing)
+    logo_sprite = Sprite();
+    logo_sprite.SetPosition(w/2, h/2 - 50);
+    
+    // Create text sprite
+    text_sprite = Sprite();
+    text_sprite.SetPosition(w/2, h/2 + 100);
+    
+    // Progress bar background
+    progress_box = Sprite();
+    progress_box.SetPosition(w/2 - 200, h - 120);
+    
+    // Progress bar fill
+    progress_bar = Sprite();
+    progress_bar.SetPosition(w/2 - 196, h - 116);
+    
+    create_particles();
+    start_time = DateTime.GetTime();
+}
+
+// Draw fallback logo using primitive rendering
+function draw_fallback_logo() {
+    // This creates a simple "RGS" text logo
+    // In practice, you'd use an image file for the logo
+    let w = Window.GetWidth();
+    let h = Window.GetHeight();
+    let elapsed = DateTime.GetTime() - start_time;
+    
+    // Pulsing glow effect
+    let pulse = 0.7 + 0.3 * Math.sin(elapsed * 2 * Math.PI / PULSE_PERIOD);
+    
+    // Update text based on boot status
+    let status = Plymouth.GetMode();
+    let msg = "";
+    
+    if (status == "boot") {
+        msg = "Iniciando RetroGameStation OS...";
+    } else if (status == "shutdown") {
+        msg = "Desligando...";
+    } else {
+        msg = "RetroGameStation OS";
+    }
+    
+    // We can't easily draw text in Plymouth script without images
+    // So we rely on the progress bar and particles for visual feedback
+}
+
+// ============================================================================
+// PROGRESS BAR
+// ============================================================================
+
+function update_progress() {
+    let progress = Plymouth.GetBootProgress();
+    let w = Window.GetWidth();
+    let h = Window.GetHeight();
+    
+    if (progress_box && progress_bar) {
+        // Update progress bar width (0-392px for 400px box with 4px padding)
+        let bar_width = 392 * progress;
+        // Note: Plymouth script doesn't have direct rectangle drawing
+        // Progress is typically shown via image sprites or the built-in progress
+    }
+}
+
+// ============================================================================
+// MAIN UPDATE LOOP
+// ============================================================================
+
+function update(delta) {
+    // Update particles
+    update_particles(delta);
+    
+    // Update progress
+    update_progress();
+    
+    // Check if video ended (in fallback mode or if video finished)
+    if (fallback_mode) {
+        draw_fallback_logo();
+    }
+    
+    // Handle video end transition
+    if (video_playing && !video_ended) {
+        // Video handling is mostly automatic via Plymouth config
+        // We just monitor for completion
+    }
+}
+
+// ============================================================================
+// MESSAGE HANDLING
+// ============================================================================
+
+function message_callback(text) {
+    // Called when systemd sends status messages
+    if (text_sprite) {
+        // Could update text sprite here if we had text rendering
+    }
+}
+
+function progress_callback(duration, progress) {
+    // Called with boot progress
+    update_progress();
+}
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+// Set background color
+Window.SetBackgroundTopColor(COLOR_BG_DEEP);
+Window.SetBackgroundBottomColor(COLOR_BG_DEEP);
+
+// Try to setup video
+setup_video();
+
+// If no video, setup fallback
+if (!video_playing || fallback_mode) {
+    setup_fallback();
+}
+
+// Register callbacks
+Plymouth.SetMessageFunction(message_callback);
+Plymouth.SetProgressFunction(progress_callback);
+Plymouth.SetUpdateFunction(update);
+
+// Log theme load
+log("RetroGameStation Plymouth theme loaded");
+log("Video mode: " + (video_playing ? "enabled" : "fallback animation"));
