@@ -418,7 +418,7 @@ setup_dirs() {
 # Install base dependencies
 install_base_deps() {
     print_step "Installing base dependencies..."
-    local deps=("base-devel" "git" "python" "python-pip" "cmake" "ninja" "meson" "pkgconf" "fakeroot" "pacman-contrib" "repo-add" "repo-remove" "pacman" "devtools" "archiso")
+    local deps=("base-devel" "git" "python" "python-pip" "cmake" "ninja" "meson" "pkgconf" "fakeroot" "pacman-contrib" "pacman" "devtools" "archiso")
     
     # Check if running as root or with sudo
     if [[ $EUID -eq 0 ]]; then
