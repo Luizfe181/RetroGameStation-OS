@@ -1,6 +1,8 @@
 #
 # packages.x86_64 - Package list for RetroGameStation
 # Hybrid Gaming (SteamOS/Gamescope) + Retroconsole Development
+# ONLY packages available in official Arch repositories (core, extra, multilib)
+# AUR/retrodev packages are built via setup-local-repo.sh and installed from local repo
 #
 
 # =============================================================================
@@ -56,7 +58,6 @@ dhclient
 openresolv
 nss-mdns
 avahi
-libnss-mdns
 
 # =============================================================================
 # GRAPHICS DRIVERS & MESA
@@ -83,7 +84,6 @@ lib32-vulkan-icd-loader
 # NVIDIA Prime/Optimus support (for laptops)
 # nvidia-prime
 # bbswitch
-# optimus-manager
 
 # Intel
 vulkan-intel
@@ -114,7 +114,6 @@ alsa-firmware
 fwupd
 fwupd-efi
 libfido2
-libfido2-udev
 tpm2-tools
 tpm2-tss
 
@@ -123,23 +122,16 @@ thermald
 power-profiles-daemon
 tlp
 tlp-rdw
-acpi_call
-acpi_call-dkms
 
 # =============================================================================
 # GAMESCOPE & STEAMOS COMPONENTS
 # =============================================================================
 gamescope
-gamescope-session-steam
-gamescope-session-steam-git
 steam
-steam-native-runtime
-steam-devices
-steam-controller
 
-# SteamOS-style session
-plasma-workspace
+# KDE Plasma (SteamOS-style session)
 plasma-desktop
+plasma-workspace
 plasma-systemmonitor
 plasma-pa
 plasma-nm
@@ -147,8 +139,6 @@ plasma-browser-integration
 kde-gtk-config
 kwin
 kwayland
-kwayland-integration
-kwayland-server
 kactivitymanagerd
 kdeclarative
 kglobalaccel
@@ -163,7 +153,6 @@ polkit-kde-agent
 systemsettings
 kde-cli-tools
 kdeplasma-addons
-kgamma
 khelpcenter
 kinfocenter
 kmenuedit
@@ -171,32 +160,20 @@ kscreen
 ksshaskpass
 ksystemstats
 kwallet-pam
-kwayland-integration
-kwin
 kwrited
 libkscreen
 libksysguard
 milou
 oxygen
-plasma-browser-integration
-plasma-desktop
 plasma-disks
 plasma-firewall
-plasma-integration
-plasma-nm
-plasma-pa
-plasma-systemmonitor
 plasma-thunderbolt
 plasma-vault
 plasma-welcome
-plasma-workspace
-plasma-workspace-wallpapers
-polkit-kde-agent
 powerdevil
 print-manager
 sddm
 sddm-kcm
-systemsettings
 user-manager
 xdg-desktop-portal-kde
 
@@ -226,20 +203,14 @@ pavucontrol
 pavucontrol-qt
 helvum
 qjackctl
-cadence
 
 # =============================================================================
 # INPUT DEVICES / GAMING HARDWARE
 # =============================================================================
 libinput
-libinput-gestures
 libinput-tools
 evtest
 inputplumber
-controller-support
-controller-support-udev
-steam-devices
-steam-controller
 hidapi
 libevdev
 mtdev
@@ -250,28 +221,20 @@ xorg-xsetroot
 # Gaming peripherals
 pius
 antimicrox
-gaming-input-udev
-# RGB/LED control
+
+# RGB/LED control (in extra)
 openrgb
-ckb-next
-razergenie
 
 # =============================================================================
-# GAMING TOOLS & UTILITIES
+# GAMING TOOLS & UTILITIES (from official repos)
 # =============================================================================
 lutris
-heroic-games-launcher
-bottles
-protonup-qt
 gamemode
 lib32-gamemode
 mangohud
 lib32-mangohud
-goverlay
-gamescope
 vkbasalt
 lib32-vkbasalt
-reshade
 dxvk
 vkd3d
 lib32-vkd3d
@@ -279,20 +242,8 @@ wine
 wine-gecko
 wine-mono
 winetricks
-bottles
 flatpak
 flatpak-builder
-steam-native-runtime
-steam-devices
-steam-controller
-controller-support
-controller-support-udev
-inputplumber
-evtest
-libevdev
-libinput
-libinput-gestures
-libinput-tools
 
 # =============================================================================
 # DEVELOPMENT TOOLS - GENERAL
@@ -341,122 +292,62 @@ ruby
 lua
 luarocks
 
-# AI Coding Assistant
-opencode
-ruby
-lua
-luarocks
+# =============================================================================
+# RETROCONSOLE DEVELOPMENT TOOLCHAINS (cross-compilation)
+# =============================================================================
+# ARM (GBA, NDS, 3DS, Switch, PSP, Vita, PS2)
+gcc-arm-none-eabi
+binutils-arm-none-eabi
+newlib-arm-none-eabi
+
+# MIPS (PS2, N64, PSP)
+gcc-mips-elf
+binutils-mips-elf
+newlib-mips-elf
+
+# PowerPC (GameCube, Wii)
+gcc-powerpc-elf
+binutils-powerpc-elf
+newlib-powerpc-elf
+
+# SuperH (Saturn, Dreamcast)
+gcc-sh-elf
+binutils-sh-elf
+newlib-sh-elf
+
+# RISC-V (future homebrew)
+gcc-riscv64-elf
+binutils-riscv64-elf
+newlib-riscv64-elf
 
 # =============================================================================
-# RETROCONSOLE DEVELOPMENT TOOLCHAINS
-# =============================================================================
-
-# PS2 Development (PS2SDK)
-# Note: These are typically built from source/AUR - see local repo script
-# ps2sdk-git
-# ps2dev-git
-# ps2toolchain-git
-
-# GameCube/Wii Development (devkitPPC)
-# devkitppc-git
-# libogc-git
-# libfat-ogc-git
-# libpng-ogc-git
-# zlib-ogc-git
-# freetype-ogc-git
-
-# GBA/NDS Development (devkitARM)
-# devkitarm-git
-# libnds-git
-# libgba-git
-# libfat-git
-# dswifi-git
-# maxmod-git
-
-# 3DS Development
-# devkitarm-git (shared)
-# ctru-git
-# citro3d-git
-# citro2d-git
-
-# Dreamcast Development (KOS)
-# kos-git
-# kos-ports-git
-
-# Saturn Development
-# saturn-dev-git
-
-# PS1 Development (PSYQ/PSn00bSDK)
-# psn00bsdk-git
-# psyq-git
-
-# N64 Development (libdragon)
-# libdragon-git
-
-# PSP Development (PSPSDK)
-# pspsdk-git
-# pspdev-git
-
-# Vita Development (VitaSDK)
-# vitasdk-git
-
-# Switch Development (libnx)
-# devkitarm-git (shared)
-# libnx-git
-
-# =============================================================================
-# REVERSE ENGINEERING & DECOMPILATION
+# REVERSE ENGINEERING & DECOMPILATION (official repos)
 # =============================================================================
 ghidra
-ghidra-scripts
 radare2
-radare2-cutter
-ida-free
-ida-pro
-binaryninja
-binaryninja-demo
-angr
-angr-management
+cutter
+gdb
+gdb-dashboard
 pwntools
 ropper
 ropgadget
 checksec
-gdb
-gdb-dashboard
-gef
-pwndbg
-voltron
-frida
-frida-tools
-objection
 capstone
 keystone
 unicorn
 z3
-claripy
-cle
-pyvex
-archinfo
-angr-native
 binwalk
-firmware-mod-kit
 squashfs-tools
 ubi-reader
 mtd-utils
-nanddump
 flashrom
 
 # =============================================================================
-# EMULATORS (for testing)
+# EMULATORS (official repos - stable versions)
 # =============================================================================
 pcsx2
-pcsx2-qt
 duckstation
 ryujinx
-yuzu
-yuzu-mainline
-yuzu-early-access
-citrus
 citra
 citra-qt
 ppsspp
@@ -467,106 +358,56 @@ mupen64plus
 mupen64plus-qt
 parallel-n64
 ares
-beetle-psx
-beetle-psx-hw
 mednafen
 mednaffe
 retroarch
-retroarch-assets
-retroarch-autoconfig
+# Libretro cores available in extra
 libretro-beetle-psx
-libretro-beetle-psx-hw
-libretro-pcsx2
 libretro-dolphin
 libretro-mupen64plus
 libretro-parallel-n64
 libretro-ppsspp
-libretro-rpcs3
 libretro-snes9x
 libretro-mgba
 libretro-gambatte
 libretro-genesis-plus-gx
 libretro-fceumm
 libretro-nestopia
-libretro-vba-next
 libretro-desmume
 libretro-melonDS
-libretro-citra
 libretro-flycast
-libretro-redream
 libretro-kronos
 libretro-yabause
 libretro-beetle-saturn
-libretro-beetle-lynx
-libretro-beetle-ngp
-libretro-beetle-pce-fast
-libretro-beetle-sgx
-libretro-beetle-wswan
-libretro-virtualjaguar
-libretro-opera
-libretro-vecx
-libretro-mame
-libretro-mame2003
-libretro-mame2010
 fbneo
-fbneo-git
 
 # =============================================================================
-# BUILD TOOLS FOR RETRODEV
+# PYTHON TOOLS FOR RETRODEV/RE
 # =============================================================================
 python-pyelftools
 python-capstone
 python-keystone
 python-unicorn
 python-z3-solver
-python-angr
-python-claripy
-python-cle
-python-pyvex
-python-archinfo
 python-pwntools
 python-ropper
 python-ropgadget
 python-checksec
 python-frida
-python-frida-tools
-python-objection
-python-binwalk
-python-firmware-mod-kit
-
-# Cross-compilation toolchains
-gcc-arm-none-eabi
-gcc-mips-elf
-gcc-powerpc-elf
-gcc-sh-elf
-gcc-riscv64-elf
-binutils-arm-none-eabi
-binutils-mips-elf
-binutils-powerpc-elf
-binutils-sh-elf
-binutils-riscv64-elf
-newlib-arm-none-eabi
-newlib-mips-elf
-newlib-powerpc-elf
-newlib-sh-elf
-newlib-riscv64-elf
 
 # =============================================================================
 # UTILITIES & TOOLS
 # =============================================================================
 htop
 btop
-btm
-bpytop
 ncdu
 duf
 dust
 lsd
-exa
+eza
 bat
 fd
 ripgrep
-rg
 fzf
 zoxide
 starship
@@ -583,9 +424,6 @@ nano
 micro
 helix
 code
-vscode
-cursor
-jetbrains-toolbox
 docker
 docker-compose
 docker-buildx
@@ -593,22 +431,6 @@ podman
 podman-compose
 buildah
 skopeo
-crictl
-cri-tools
-kubernetes-tools
-kubectl
-helm
-minikube
-kind
-k3d
-terraform
-packer
-vagrant
-ansible
-vagrant-libvirt
-libvirt
-virt-manager
-qemu
 qemu-base
 qemu-desktop
 qemu-emulators-full
@@ -619,13 +441,12 @@ qemu-system-mips
 qemu-system-ppc
 qemu-system-riscv
 qemu-system-sparc
-qemu-user
-qemu-user-static
 virtiofsd
 spice-gtk
 spice-vdagent
 usbredir
 virglrenderer
+libvirt
 libvirt-glib
 libvirt-python
 python-libvirt
@@ -646,7 +467,6 @@ ttf-fira-code
 ttf-fira-sans
 ttf-jetbrains-mono
 ttf-cascadia-code
-ttf-victor-mono
 ttf-inconsolata
 ttf-hack
 adobe-source-code-pro-fonts
@@ -654,19 +474,13 @@ adobe-source-sans-pro-fonts
 adobe-source-serif-pro-fonts
 cantarell-fonts
 inter-font
-nerd-fonts-complete
 nerd-fonts-jetbrains-mono
 nerd-fonts-fira-code
 nerd-fonts-cascadia-code
-nerd-fonts-victor-mono
 nerd-fonts-hack
 nerd-fonts-inconsolata
-nerd-fonts-ubuntu-mono
 nerd-fonts-dejavu-sans-mono
 nerd-fonts-roboto-mono
-ttf-ms-fonts
-ttf-ms-win10
-ttf-ms-win11
 
 # =============================================================================
 # GRAPHICAL APPLICATIONS
@@ -674,7 +488,6 @@ ttf-ms-win11
 firefox
 firefox-i18n-pt-br
 chromium
-brave-browser
 thunderbird
 libreoffice-fresh
 libreoffice-fresh-pt-br
@@ -683,28 +496,22 @@ inkscape
 krita
 blender
 obs-studio
-obs-studio-browser
-obs-studio-freeworld
 kdenlive
 shotcut
 handbrake
 handbrake-cli
 ffmpeg
-ffmpeg-full
 ffmpegthumbs
 mpv
 vlc
 celluloid
 haruna
-gnome-mpv
 dolphin
 konsole
 kate
 kwrite
 kcalc
 kfind
-kate
-kwrite
 okular
 gwenview
 spectacle
@@ -715,19 +522,6 @@ kwalletmanager
 kgpg
 kleopatra
 kdeconnect
-kdeconnect-kde
-kdeconnect-sms
-kdeconnect-bluetooth
-kdeconnect-nfc
-kdeconnect-ssh
-kdeconnect-clipboard
-kdeconnect-browser
-kdeconnect-firefox
-kdeconnect-chrome
-kdeconnect-edge
-kdeconnect-opera
-kdeconnect-vivaldi
-kdeconnect-brave
 
 # =============================================================================
 # FILE SYSTEMS & STORAGE
@@ -740,16 +534,12 @@ dosfstools
 e2fsprogs
 xfsprogs
 jfsutils
-reiserfsprogs
 nilfs-utils
 lvm2
 cryptsetup
 veracrypt
-zfs-dkms
-zfs-utils
 snapper
 timeshift
-timeshift-autosnap
 grub-btrfs
 btrfs-assistant
 btrfsmaintenance
@@ -758,43 +548,26 @@ btrfsmaintenance
 # SECURITY & PRIVACY
 # =============================================================================
 apparmor
-apparmor-profiles
 audit
-audit-libs
 libcap
 libcap-ng
 libseccomp
-seccomp
-landlock
 tpm2-tools
 tpm2-tss
 tpm2-abrmd
 fwupd
 fwupd-efi
 libfido2
-libfido2-udev
 ykman
-ykman-gui
-yubikey-manager
-yubikey-manager-qt
-yubikey-personalization
-yubikey-personalization-gui
-pam-u2f
-pam-fido2
-libu2f-host
-libu2f-server
 opensc
-opensc-pkcs11
 ccid
 pcsc-tools
 pcsc-lite
-pcsc-perl
 
 # =============================================================================
 # LOCALIZATION (Portuguese Brazil)
 # =============================================================================
 man-pages-pt_br
-man-pages-pt
 aspell-pt
 aspell-pt_br
 hunspell-pt
