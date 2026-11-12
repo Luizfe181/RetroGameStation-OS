@@ -11,7 +11,7 @@ PRESETS=('default' 'fallback')
 default_config="/etc/mkinitcpio.conf"
 default_image="/boot/initramfs-linux.img"
 default_uki="/efi/EFI/RetroGameStation/retrogamestation-linux.efi"
-default_options="-S autodetect -S keyboard"
+default_options="-S autodetect -S keyboard -S keymap"
 
 fallback_config="/etc/mkinitcpio.conf"
 fallback_image="/boot/initramfs-linux-fallback.img"
