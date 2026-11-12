@@ -154,7 +154,7 @@ parse_args() {
             -r|--repo-dir)
                 REPO_DIR="$2"
                 BUILD_DIR="${REPO_DIR}/build"
-                PKG_DIR="${REPO_DIR}/packages"
+                PKG_DIR="${REPO_DIR}"
                 SRC_DIR="${REPO_DIR}/sources"
                 shift 2
                 ;;
