@@ -228,11 +228,7 @@ build_iso() {
     
     print_info "Running: mkarchiso ${mkarchiso_args[*]}"
     
-    if [[ "$VERBOSE" == true ]]; then
-        sudo mkarchiso "${mkarchiso_args[@]}"
-    else
-        sudo mkarchiso "${mkarchiso_args[@]}" 2>&1 | tail -20
-    fi
+    sudo mkarchiso "${mkarchiso_args[@]}"
     
     # Find the generated ISO
     local iso_file
