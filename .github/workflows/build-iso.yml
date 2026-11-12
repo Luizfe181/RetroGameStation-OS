@@ -25,14 +25,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install dependencies and setup build user
         run: |
           pacman -Sy --noconfirm archiso git base-devel devtools pacman-contrib
+          # Create build user
+          useradd -m -G wheel -s /bin/bash builder
+          echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
+          chmod 440 /etc/sudoers.d/builder
+          # Set up build directory permissions
+          chown -R builder:builder /__w/RetroGameStation-OS
 
       - name: Build local repo (gaming + RE + emulators)
         run: |
-          chmod +x scripts/setup-local-repo.sh
-          ./scripts/setup-local-repo.sh
+          sudo -u builder bash -c '
+            cd /__w/RetroGameStation-OS/RetroGameStation-OS
+            chmod +x scripts/setup-local-repo.sh
+            ./scripts/setup-local-repo.sh
+          '
 
       - name: Build ISO
         run: |
