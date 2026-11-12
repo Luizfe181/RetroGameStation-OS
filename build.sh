@@ -31,7 +31,6 @@ CLEAN_OUT=false
 VERBOSE=false
 SIGN_ISO=false
 GPG_KEY=""
-PARALLEL_JOBS=$(nproc)
 
 # Function to print colored output
 print_info() { echo -e "${BLUE}[INFO]${NC} $*"; }
@@ -57,7 +56,6 @@ Options:
     -v, --verbose           Verbose output
     -s, --sign              Sign ISO with GPG key
     -k, --gpg-key KEY       GPG key ID for signing
-    -j, --jobs N            Parallel jobs (default: nproc)
     --no-iso                Skip ISO build (only build local repo)
     --no-local-repo         Skip local repo build
     --only-local-repo       Only build local repository
@@ -106,10 +104,6 @@ parse_args() {
                 ;;
             -k|--gpg-key)
                 GPG_KEY="$2"
-                shift 2
-                ;;
-            -j|--jobs)
-                PARALLEL_JOBS="$2"
                 shift 2
                 ;;
             --no-iso)
@@ -213,7 +207,6 @@ build_iso() {
         -v
         -w "$WORK_DIR"
         -o "$OUT_DIR"
-        -j "$PARALLEL_JOBS"
     )
     
     if [[ "$SIGN_ISO" == true ]]; then
