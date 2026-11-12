@@ -91,7 +91,6 @@ lib32-vulkan-intel
 xf86-video-intel
 intel-media-driver
 intel-gmmlib
-lib32-intel-media-driver
 
 # Generic
 vulkan-tools
@@ -187,8 +186,6 @@ pipewire-jack
 pipewire-roc
 libpipewire
 lib32-pipewire
-lib32-pipewire-pulse
-lib32-pipewire-alsa
 lib32-pipewire-jack
 wireplumber
 libwireplumber
@@ -235,7 +232,6 @@ mangohud
 lib32-mangohud
 vkbasalt
 lib32-vkbasalt
-dxvk
 vkd3d
 lib32-vkd3d
 wine
@@ -293,41 +289,12 @@ lua
 luarocks
 
 # =============================================================================
-# RETROCONSOLE DEVELOPMENT TOOLCHAINS (cross-compilation)
-# =============================================================================
-# ARM (GBA, NDS, 3DS, Switch, PSP, Vita, PS2)
-gcc-arm-none-eabi
-binutils-arm-none-eabi
-newlib-arm-none-eabi
-
-# MIPS (PS2, N64, PSP)
-gcc-mips-elf
-binutils-mips-elf
-newlib-mips-elf
-
-# PowerPC (GameCube, Wii)
-gcc-powerpc-elf
-binutils-powerpc-elf
-newlib-powerpc-elf
-
-# SuperH (Saturn, Dreamcast)
-gcc-sh-elf
-binutils-sh-elf
-newlib-sh-elf
-
-# RISC-V (future homebrew)
-gcc-riscv64-elf
-binutils-riscv64-elf
-newlib-riscv64-elf
-
-# =============================================================================
 # REVERSE ENGINEERING & DECOMPILATION (official repos)
 # =============================================================================
 ghidra
 radare2
 cutter
 gdb
-gdb-dashboard
 pwntools
 ropper
 ropgadget
@@ -347,19 +314,14 @@ flashrom
 # =============================================================================
 pcsx2
 duckstation
-ryujinx
 citra
-citra-qt
 ppsspp
-ppsspp-qt
 rpcs3
 dolphin-emu
 mupen64plus
-mupen64plus-qt
 parallel-n64
 ares
 mednafen
-mednaffe
 retroarch
 # Libretro cores available in extra
 libretro-beetle-psx
@@ -374,7 +336,6 @@ libretro-genesis-plus-gx
 libretro-fceumm
 libretro-nestopia
 libretro-desmume
-libretro-melonDS
 libretro-flycast
 libretro-kronos
 libretro-yabause
@@ -391,9 +352,7 @@ python-unicorn
 python-z3-solver
 python-pwntools
 python-ropper
-python-ropgadget
 python-checksec
-python-frida
 
 # =============================================================================
 # UTILITIES & TOOLS
@@ -474,13 +433,7 @@ adobe-source-sans-pro-fonts
 adobe-source-serif-pro-fonts
 cantarell-fonts
 inter-font
-nerd-fonts-jetbrains-mono
-nerd-fonts-fira-code
-nerd-fonts-cascadia-code
-nerd-fonts-hack
-nerd-fonts-inconsolata
-nerd-fonts-dejavu-sans-mono
-nerd-fonts-roboto-mono
+nerd-fonts
 
 # =============================================================================
 # GRAPHICAL APPLICATIONS
@@ -570,11 +523,8 @@ pcsc-lite
 man-pages-pt_br
 aspell-pt
 aspell-pt_br
-hunspell-pt
 hunspell-pt_br
-mythes-pt
 mythes-pt_br
-hyphen-pt
 hyphen-pt_br
 libreoffice-fresh-pt-br
 firefox-i18n-pt-br
